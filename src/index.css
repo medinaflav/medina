@@ -1,0 +1,147 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&family=Scheherazade+New:wght@400;700&display=swap');
+
+:root {
+  /* Restored Palette based on Screenshots */
+  --color-gold-main: #c5a028;
+  /* The Title Gold */
+  --color-gold-light: #fdf6e3;
+  /* Selected Card Background */
+
+  --color-brown-dark: #4a4036;
+  /* "Next Word" Button */
+  --color-brown-text: #2d241c;
+  /* Main Text */
+
+  --color-red-danger: #ef4444;
+  /* Sign Out */
+  --color-green-success: #10b981;
+  /* Progress */
+
+  --bg-app: #fcfbf9;
+  /* Very light background */
+  --bg-card: #ffffff;
+
+  /* Fonts */
+  --font-ui: 'Outfit', sans-serif;
+  --font-arabic: 'Scheherazade New', serif;
+
+  /* Missing Variables Restored */
+  --color-sand-50: #fdfbf7;
+  --color-sand-100: #f7f3ec;
+  --color-sand-200: #e7e5e4;
+  --color-sand-300: #d6d3d1;
+  --color-sand-400: #a8a29e;
+  --color-sand-500: #78716c;
+  --color-sand-900: #4a4036;
+
+  --color-blue-900: #1e3a8a;
+
+  --color-emerald-500: #10b981;
+  --color-red-500: #ef4444;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: var(--font-ui);
+  background-color: var(--bg-app);
+  color: var(--color-brown-text);
+  min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--color-brown-text);
+  margin-bottom: 0.5rem;
+}
+
+/* Specific Utilities from Old Design */
+
+.title-gold {
+  color: var(--color-gold-main);
+  font-family: var(--font-arabic);
+}
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+
+/* Button Styles - Matching Screenshots (Gold) */
+.btn-primary {
+  background-color: var(--color-gold-main);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.1s, background-color 0.2s;
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--color-gold-main);
+  border: 2px solid var(--color-gold-main);
+  border-radius: 50px;
+  padding: 0.9rem 1.9rem;
+  /* Compensate for border */
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-gold-light);
+}
+
+.btn-danger-outline {
+  background: white;
+  color: var(--color-red-danger);
+  border: 2px solid var(--color-red-danger);
+  border-radius: 50px;
+  padding: 0.8rem 2rem;
+  font-weight: 600;
+}
+
+/* Arabic Text Utils */
+.arabic-text {
+  font-family: var(--font-arabic);
+  direction: rtl;
+}
+
+/* Animations */
+.fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

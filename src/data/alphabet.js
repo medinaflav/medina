@@ -1,0 +1,33 @@
+export const ALPHABET = [
+    { id: 'alif', char: 'ا', name: 'Alif', transliteration: 'alif', arabicName: 'ألف' },
+    { id: 'ba', char: 'ب', name: 'Bā\'', transliteration: 'ba', arabicName: 'باء' },
+    { id: 'ta', char: 'ت', name: 'Tā\'', transliteration: 'ta', arabicName: 'تاء' },
+    { id: 'tha', char: 'ث', name: 'Thā\'', transliteration: 'tha', arabicName: 'ثاء' },
+    { id: 'jim', char: 'ج', name: 'Jīm', transliteration: 'jim', arabicName: 'جيم' },
+    { id: 'ha', char: 'ح', name: 'Ḥā\'', transliteration: 'ḥa', arabicName: 'حاء' },
+    { id: 'kha', char: 'خ', name: 'Khā\'', transliteration: 'kha', arabicName: 'خاء' },
+    { id: 'dal', char: 'د', name: 'Dāl', transliteration: 'dal', arabicName: 'دال' },
+    { id: 'dhal', char: 'ذ', name: 'Dhāl', transliteration: 'dhal', arabicName: 'ذال' },
+    { id: 'ra', char: 'ر', name: 'Rā\'', transliteration: 'ra', arabicName: 'راء' },
+    { id: 'zay', char: 'ز', name: 'Zay', transliteration: 'zay', arabicName: 'زاي' },
+    { id: 'sin', char: 'س', name: 'Sīn', transliteration: 'sin', arabicName: 'سين' },
+    { id: 'shin', char: 'ش', name: 'Shīn', transliteration: 'shin', arabicName: 'شين' },
+    { id: 'sad', char: 'ص', name: 'Ṣād', transliteration: 'ṣad', arabicName: 'صاد' },
+    { id: 'dad', char: 'ض', name: 'Ḍād', transliteration: 'ḍad', arabicName: 'ضاد' },
+    { id: 'ta_emph', char: 'ط', name: 'Ṭā\'', transliteration: 'ṭa', arabicName: 'طاء' },
+    { id: 'za_emph', char: 'ظ', name: 'Ẓā\'', transliteration: 'ẓa', arabicName: 'ظاء' },
+    { id: 'ayn', char: 'ع', name: 'ʿAyn', transliteration: 'ayn', arabicName: 'عين' },
+    { id: 'ghayn', char: 'غ', name: 'Ghayn', transliteration: 'ghayn', arabicName: 'غين' },
+    { id: 'fa', char: 'ف', name: 'Fā\'', transliteration: 'fa', arabicName: 'فاء' },
+    { id: 'qaf', char: 'ق', name: 'Qāf', transliteration: 'qaf', arabicName: 'قاف' },
+    { id: 'kaf', char: 'ك', name: 'Kāf', transliteration: 'kaf', arabicName: 'كاف' },
+    { id: 'lam', char: 'ل', name: 'Lām', transliteration: 'lam', arabicName: 'لام' },
+    { id: 'mim', char: 'م', name: 'Mīm', transliteration: 'mim', arabicName: 'ميم' },
+    { id: 'nun', char: 'ن', name: 'Nūn', transliteration: 'nun', arabicName: 'نون' },
+    { id: 'ha_h', char: 'ه', name: 'Hā\'', transliteration: 'ha', arabicName: 'هاء' },
+    { id: 'waw', char: 'و', name: 'Wāw', transliteration: 'waw', arabicName: 'واو' },
+    { id: 'ya', char: 'ي', name: 'Yā\'', transliteration: 'ya', arabicName: 'ياء' },
+];
+
+// Helper to get letter by ID
+export const getLetter = (id) => ALPHABET.find(l => l.id === id);
