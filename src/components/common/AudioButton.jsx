@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import useAudioPlayer from '../../hooks/useAudioPlayer';
+import AudioIcon from './AudioIcon';
 
 export default function AudioButton({
     textToSpeak,
@@ -8,18 +10,9 @@ export default function AudioButton({
     style = {},
     disabled = false
 }) {
-    const [isPlaying, setIsPlaying] = useState(false);
+    const { isPlaying, play } = useAudioPlayer(textToSpeak);
 
-    // Cleanup on unmount
-    useEffect(() => {
-        return () => {
-            if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel();
-            }
-        };
-    }, []);
-
-    const handlePlay = (e) => {
+    const handleClick = (e) => {
         e.stopPropagation();
         e.preventDefault();
 
@@ -29,29 +22,17 @@ export default function AudioButton({
             return;
         }
 
-        if ('speechSynthesis' in window && textToSpeak) {
-            window.speechSynthesis.cancel();
-
-            const utterance = new SpeechSynthesisUtterance(textToSpeak);
-            utterance.lang = 'ar-SA';
-
-            setIsPlaying(true);
-
-            utterance.onend = () => setIsPlaying(false);
-            utterance.onerror = () => setIsPlaying(false);
-
-            window.speechSynthesis.speak(utterance);
-        }
+        play();
     };
 
     return (
         <div
-            onClick={handlePlay}
+            onClick={handleClick}
             className={className}
             style={{
                 width: size,
                 height: size,
-                backgroundColor: isPlaying ? 'var(--color-gold-main)' : 'white',
+                backgroundColor: isPlaying ? 'var(--color-gold-main)' : 'var(--bg-card)',
                 borderRadius: '50%',
                 display: 'flex',
                 alignItems: 'center',
@@ -67,9 +48,7 @@ export default function AudioButton({
             }}
             title="Écouter la prononciation"
         >
-            <span style={{ fontSize: `calc(${size} * 0.5)` }}>
-                {isPlaying ? '🔊' : '🔈'}
-            </span>
+            <AudioIcon isPlaying={isPlaying} size={parseInt(size) * 0.5 + 'px'} />
         </div>
     );
 }

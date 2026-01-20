@@ -17,10 +17,9 @@
   --color-green-success: #10b981;
   /* Progress */
 
+  /* Dark Mode Overrides */
   --bg-app: #fcfbf9;
-  /* Very light background */
   --bg-card: #ffffff;
-
   /* Fonts */
   --font-ui: 'Outfit', sans-serif;
   --font-arabic: 'Scheherazade New', serif;
@@ -40,6 +39,27 @@
   --color-red-500: #ef4444;
 }
 
+[data-theme='dark'] {
+  --bg-app: #2d241c;
+  /* Requested Brown */
+  --bg-card: #3a3028;
+  /* Slightly lighter brown for cards */
+
+  --color-brown-text: #f7f3ec;
+  /* Light Sand text */
+  --color-sand-900: #f7f3ec;
+  /* For headings */
+  --color-sand-500: #d6d3d1;
+  /* Lighter secondary text */
+  --color-sand-200: #4a4036;
+  /* Darker borders */
+
+  --color-gold-light: #4a4036;
+  /* Darker gold/brown for secondary backgrounds */
+
+  /* Buttons and accents remain Gold/Red/Green but text on gold might need check */
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -52,6 +72,7 @@ body {
   background-color: var(--bg-app);
   color: var(--color-brown-text);
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
 h1,

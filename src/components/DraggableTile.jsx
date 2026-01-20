@@ -1,5 +1,6 @@
 import React from 'react';
 import { useDraggable } from '@dnd-kit/core';
+import AudioButton from './common/AudioButton';
 
 export default function DraggableTile({ id, char, name, arabicChar, arabicName, onClick, disabled }) {
     const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
@@ -12,16 +13,7 @@ export default function DraggableTile({ id, char, name, arabicChar, arabicName, 
         zIndex: 1000,
     } : undefined;
 
-    const handlePlaySound = (e) => {
-        e.stopPropagation(); // Prevent drag/click
-        if ('speechSynthesis' in window) {
-            // Prefer full arabic name for clarity (e.g. "Haa") over just the char ("Ḥa")
-            const textToSpeak = arabicName || arabicChar || char;
-            const utterance = new SpeechSynthesisUtterance(textToSpeak);
-            utterance.lang = 'ar-SA'; // Arabic
-            window.speechSynthesis.speak(utterance);
-        }
-    };
+    // Audio handled internally by AudioButton component
 
     return (
         <div
@@ -55,28 +47,16 @@ export default function DraggableTile({ id, char, name, arabicChar, arabicName, 
         >
             {/* Audio Button */}
             {!isDragging && (
-                <div
-                    onClick={handlePlaySound}
-                    onPointerDown={(e) => e.stopPropagation()} // Prevent drag start
+                <AudioButton
+                    textToSpeak={arabicName || arabicChar || char}
+                    size="24px"
                     style={{
                         position: 'absolute',
                         top: '-10px',
                         right: '-10px',
-                        width: '24px',
-                        height: '24px',
-                        backgroundColor: 'white',
-                        borderRadius: '50%',
-                        border: '1px solid var(--color-gold-300)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        cursor: 'pointer',
-                        fontSize: '12px',
-                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                        zIndex: 10
                     }}
-                >
-                    🔊
-                </div>
+                />
             )}
             {char}
         </div>

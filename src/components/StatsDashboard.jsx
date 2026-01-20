@@ -95,19 +95,20 @@ export default function StatsDashboard({ selectedLetters = [] }) {
 
                 {/* Needs Review Card */}
                 <div style={{
-                    backgroundColor: '#fef2f2', // Pinkish background
+                    backgroundColor: 'var(--bg-danger-light)', // Pinkish background
                     borderRadius: '16px',
                     padding: '1.5rem',
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '0.5rem',
-                    justifyContent: 'center'
+                    justifyContent: 'center',
+                    border: '1px solid var(--color-red-500)' // Adding border to make it distinct as a "frame"
                 }}>
                     <div style={{
                         display: 'flex',
                         alignItems: 'center',
                         gap: '0.5rem',
-                        color: '#991b1b', // Dark Red
+                        color: 'var(--color-red-500)', // Standard Red
                         fontWeight: '800',
                         fontSize: '0.9rem',
                         textTransform: 'uppercase',
@@ -115,7 +116,7 @@ export default function StatsDashboard({ selectedLetters = [] }) {
                     }}>
                         <span style={{ fontSize: '1.2rem' }}>⚠️</span> À REVOIR
                     </div>
-                    <div style={{ color: '#b91c1c', fontSize: '1rem', lineHeight: '1.5' }}>
+                    <div style={{ color: 'var(--text-secondary)', fontSize: '1rem', lineHeight: '1.5' }}>
                         {weakLetters ? (
                             <span>Focus sur : <strong>{weakLetters}</strong></span>
                         ) : (
@@ -206,7 +207,7 @@ export default function StatsDashboard({ selectedLetters = [] }) {
                         zIndex: 1000
                     }} onClick={() => setSelectedLetterId(null)}>
                         <div style={{
-                            backgroundColor: 'white',
+                            backgroundColor: 'var(--bg-card)',
                             padding: '2rem',
                             borderRadius: '24px',
                             width: '90%',
@@ -226,7 +227,7 @@ export default function StatsDashboard({ selectedLetters = [] }) {
                                     return (
                                         <div key={formName} style={{
                                             padding: '0.8rem',
-                                            backgroundColor: '#f9fafb',
+                                            backgroundColor: 'var(--color-sand-50)',
                                             borderRadius: '12px',
                                             textAlign: 'center'
                                         }}>

@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import WordPuzzle from './WordPuzzle';
+import useAudioPlayer from '../hooks/useAudioPlayer';
+import AudioIcon from './common/AudioIcon';
 
 export default function GameArea({ words, onExit }) {
     // Session State
@@ -16,6 +18,9 @@ export default function GameArea({ words, onExit }) {
 
     // Simplified currentWord logic
     const currentWord = sessionWords[currentIndex];
+
+    // Audio Player for the text button
+    const { play: playWord, isPlaying: isWordPlaying } = useAudioPlayer(currentWord ? (currentWord.vocalizedText || currentWord.text) : '');
 
     // Start a new session
     const startSession = useCallback(() => {
@@ -166,7 +171,7 @@ export default function GameArea({ words, onExit }) {
                         }}></span>
                     </label>
                 </div>
-            </div>
+            </div >
 
             {currentWord && (
                 <WordPuzzle
@@ -177,7 +182,8 @@ export default function GameArea({ words, onExit }) {
                     showVowels={showVowels}
                     isLocked={hasValidated}
                 />
-            )}
+            )
+            }
 
             {/* Control Button (Validate or Next) */}
             <div className="fade-in practice-actions" style={{
@@ -209,26 +215,24 @@ export default function GameArea({ words, onExit }) {
                     </button>
                 ) : (
                     /* POST-VALIDATION: Listen + Next Row */
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%', alignItems: 'center' }}>
+
                         <button
-                            onClick={() => {
-                                if ('speechSynthesis' in window) {
-                                    const utterance = new SpeechSynthesisUtterance(currentWord.vocalizedText || currentWord.text);
-                                    utterance.lang = 'ar-SA';
-                                    window.speechSynthesis.speak(utterance);
-                                }
-                            }}
+                            onClick={playWord}
                             className="btn-secondary"
                             style={{
+                                width: '100%',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 gap: '0.5rem',
-                                width: '100%'
+                                color: isWordPlaying ? 'var(--color-gold-600)' : 'inherit',
+                                borderColor: isWordPlaying ? 'var(--color-gold-main)' : undefined
                             }}
                         >
-                            <span>🔊</span> Écouter
+                            <span>{isWordPlaying ? '🔊' : '🔈'}</span> Écouter le mot
                         </button>
+
                         <button
                             onClick={handleNextWord}
                             className="btn-primary"
@@ -268,7 +272,7 @@ export default function GameArea({ words, onExit }) {
                         zIndex: 1000
                     }}>
                         <div style={{
-                            backgroundColor: 'white',
+                            backgroundColor: 'var(--bg-card)',
                             padding: '2rem',
                             borderRadius: '16px',
                             maxWidth: '400px',

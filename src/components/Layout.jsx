@@ -7,7 +7,7 @@ export default function Layout({ children, currentView, onNavigate, isSessionAct
             width: '100%',
             maxWidth: '100%',
             margin: '0',
-            padding: '2rem',
+            padding: '1rem',
             minHeight: '100vh',
             display: 'flex',
             flexDirection: 'column',
@@ -20,7 +20,6 @@ export default function Layout({ children, currentView, onNavigate, isSessionAct
 
                     <header style={{
                         textAlign: 'center',
-                        paddingBottom: '2rem',
                     }}>
                         <h1 className="title-gold" style={{
                             fontSize: '4.5rem',
