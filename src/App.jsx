@@ -158,7 +158,7 @@ export default function App() {
                 return null;
 
             case 'progress':
-                return <StatsDashboard />;
+                return <StatsDashboard selectedLetters={selectedLetters} />;
             default:
                 return (
                     <LetterSelector

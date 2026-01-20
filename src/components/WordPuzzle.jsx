@@ -189,9 +189,9 @@ export default function WordPuzzle({ word, onStateChange, showFeedback, showVowe
         >
             {/* ... */}
             <div style={{ maxWidth: '1000px', margin: '0 auto', textAlign: 'center' }}>
-                <h3 style={{
+                <h3 className="arabic-title-mobile" style={{
                     fontFamily: 'var(--font-arabic)',
-                    fontSize: '5rem',
+                    fontSize: '5rem', // Default for desktop
                     marginBottom: '1rem',
                     color: 'var(--color-brown-text)',
                     lineHeight: 1.2
@@ -290,16 +290,18 @@ export default function WordPuzzle({ word, onStateChange, showFeedback, showVowe
 
                 {/* Source Dock */}
                 <div style={{
-                    minHeight: '100px',
-                    padding: '1.5rem',
+                    minHeight: '80px',
+                    padding: '1rem',
                     backgroundColor: 'var(--color-sand-100)',
                     borderRadius: '16px',
                     display: 'flex',
                     flexWrap: 'wrap',
                     justifyContent: 'center',
                     gap: '1rem',
-                    opacity: isLocked ? 0.5 : 1,
-                    pointerEvents: isLocked ? 'none' : 'auto'
+                    opacity: 1, // Keep full opacity even when locked
+                    pointerEvents: isLocked ? 'none' : 'auto',
+                    maxWidth: '600px',
+                    margin: '0 auto'
                 }}>
                     {dockTiles.map((tile) => {
                         const letter = getLetter(tile.letterId);

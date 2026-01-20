@@ -4,7 +4,7 @@ import { getVisualForm } from '../utils/arabicForms';
 import { getLetter } from '../data/alphabet';
 
 
-export default function StatsDashboard() {
+export default function StatsDashboard({ selectedLetters = [] }) {
     const { user } = useAuth();
     const [stats, setStats] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -39,7 +39,7 @@ export default function StatsDashboard() {
 
     const FORMS = ['initial', 'medial', 'final', 'isolated'];
     const MASTERY_THRESHOLD = 0.8;
-    const ATTEMPTS_THRESHOLD = 3;
+    const ATTEMPTS_THRESHOLD = 1; // Changed to 1 so 100% instantly counts
 
     // Calculate Overall Stats
     const totalAttempts = stats.reduce((sum, s) => sum + s.total_attempts, 0);
@@ -62,7 +62,7 @@ export default function StatsDashboard() {
                 marginBottom: '1.5rem',
                 fontWeight: '800'
             }}>
-                Vos Progrès
+                Votre progression
             </h2>
 
             {/* Summary Cards Grid */}
@@ -132,7 +132,7 @@ export default function StatsDashboard() {
                 marginBottom: '1rem',
                 fontWeight: '700'
             }}>
-                Statistiques Détaillées
+                Statistiques détaillées
             </h3>
 
             {/* Detailed Grid */}
@@ -141,8 +141,10 @@ export default function StatsDashboard() {
                 gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
                 gap: '1rem'
             }}>
-                {Object.entries(groupedStats).map(([letterId, forms]) => {
+                {selectedLetters.map((letterId) => {
+                    const forms = groupedStats[letterId] || [];
                     const letter = getLetter(letterId) || { name: letterId, char: '?' };
+
                     const lAttempts = forms.reduce((sum, f) => sum + f.total_attempts, 0);
                     const lSuccess = forms.reduce((sum, f) => sum + f.success_count, 0);
                     const lRate = lAttempts > 0 ? Math.round((lSuccess / lAttempts) * 100) : 0;
@@ -159,7 +161,9 @@ export default function StatsDashboard() {
                                 cursor: 'pointer',
                                 display: 'flex',
                                 flexDirection: 'column',
-                                gap: '0.5rem'
+                                gap: '0.5rem',
+                                transition: 'all 0.2s',
+                                opacity: lAttempts === 0 ? 0.8 : 1
                             }}
                         >
                             <div style={{
@@ -177,13 +181,13 @@ export default function StatsDashboard() {
                             <div style={{
                                 height: '4px',
                                 width: '40px',
-                                backgroundColor: 'var(--color-green-success)',
+                                backgroundColor: lAttempts === 0 ? '#e5e7eb' : (lRate >= 80 ? 'var(--color-green-success)' : (lRate >= 50 ? '#f59e0b' : '#ef4444')),
                                 margin: '0.5rem auto',
                                 borderRadius: '2px'
                             }} />
 
                             <div style={{ fontSize: '0.8rem', color: '#6b7280' }}>
-                                {lRate}% ({lSuccess}/{lAttempts})
+                                {lAttempts === 0 ? 'Pas encore commencé' : `${lRate}% (${lSuccess}/${lAttempts})`}
                             </div>
                         </div>
                     );
@@ -233,7 +237,7 @@ export default function StatsDashboard() {
                                                 {formName}
                                             </div>
                                             <div style={{ color: isMastered ? 'var(--color-green-success)' : 'var(--color-brown-text)', fontWeight: 'bold' }}>
-                                                {rate}%
+                                                {rate}% <span style={{ fontSize: '0.8em', fontWeight: 'normal', opacity: 0.7 }}>({success}/{attempts})</span>
                                             </div>
                                         </div>
                                     );

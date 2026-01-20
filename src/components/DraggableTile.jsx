@@ -35,7 +35,7 @@ export default function DraggableTile({ id, char, name, arabicChar, arabicName, 
                 alignItems: 'center',
                 justifyContent: 'center',
                 backgroundColor: 'var(--color-sand-50)',
-                border: '2px solid var(--color-gold-500)',
+                border: '2px solid var(--color-gold-main)',
                 borderRadius: '12px',
                 fontFamily: 'var(--font-ui)',
                 fontWeight: 'bold',
@@ -45,7 +45,7 @@ export default function DraggableTile({ id, char, name, arabicChar, arabicName, 
                 boxShadow: isDragging
                     ? '0 10px 15px -3px rgba(0, 0, 0, 0.2)'
                     : '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                opacity: isDragging ? 0.8 : (disabled ? 0.8 : 1),
+                opacity: isDragging ? 0.8 : 1, // Full opacity even if disabled
                 touchAction: 'none'
             }}
             {...listeners}

@@ -129,14 +129,8 @@ export default function LetterSelector({ selectedLetters, onSelectionChange }) {
                 </div>
             </div>
 
-            <div className="grid" style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))',
-                gap: '2rem',
-                direction: 'rtl',
-                paddingBottom: '100px', /* Space for sticky footer */
-                justifyContent: 'center'
-            }}>
+            {/* Responsive Grid Container */}
+            <div className="letter-grid">
                 {ALPHABET.map((letter) => {
                     const isSelected = selectedLetters.includes(letter.id);
                     const isSolar = SOLAR_LETTERS.has(letter.id);

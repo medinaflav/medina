@@ -1,0 +1,75 @@
+import React, { useState, useEffect } from 'react';
+
+export default function AudioButton({
+    textToSpeak,
+    onClick,
+    size = '40px',
+    className = '',
+    style = {},
+    disabled = false
+}) {
+    const [isPlaying, setIsPlaying] = useState(false);
+
+    // Cleanup on unmount
+    useEffect(() => {
+        return () => {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+            }
+        };
+    }, []);
+
+    const handlePlay = (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+
+        if (disabled) return;
+        if (onClick) {
+            onClick(e);
+            return;
+        }
+
+        if ('speechSynthesis' in window && textToSpeak) {
+            window.speechSynthesis.cancel();
+
+            const utterance = new SpeechSynthesisUtterance(textToSpeak);
+            utterance.lang = 'ar-SA';
+
+            setIsPlaying(true);
+
+            utterance.onend = () => setIsPlaying(false);
+            utterance.onerror = () => setIsPlaying(false);
+
+            window.speechSynthesis.speak(utterance);
+        }
+    };
+
+    return (
+        <div
+            onClick={handlePlay}
+            className={className}
+            style={{
+                width: size,
+                height: size,
+                backgroundColor: isPlaying ? 'var(--color-gold-main)' : 'white',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: disabled ? 'default' : 'pointer',
+                color: isPlaying ? 'white' : 'var(--color-brown-text)',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                border: '1px solid ' + (isPlaying ? 'var(--color-gold-main)' : '#f3f4f6'),
+                transform: isPlaying ? 'scale(1.1)' : 'scale(1)',
+                opacity: disabled ? 0.6 : 1,
+                ...style
+            }}
+            title="Écouter la prononciation"
+        >
+            <span style={{ fontSize: `calc(${size} * 0.5)` }}>
+                {isPlaying ? '🔊' : '🔈'}
+            </span>
+        </div>
+    );
+}

@@ -8,7 +8,7 @@ export default function Navbar({ currentView, onNavigate }) {
     const navItems = [
         { id: 'library', label: 'Bibliothèque', icon: '📚' },
         { id: 'practice', label: 'Entraînement', icon: '🎮' },
-        { id: 'progress', label: 'Progrès', icon: '📊' }
+        { id: 'progress', label: 'Progression', icon: '📊' }
     ];
 
     const toggleMenu = () => setIsOpen(!isOpen);
