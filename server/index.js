@@ -284,6 +284,26 @@ app.get('/api/stats', authenticateToken, async (req, res) => {
         res.status(500).json({ error: e.message });
     }
 });
+    }
+});
+
+// Serve Static Files (Frontend) in Production
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+// Go up one level from 'server' to root to find 'dist'
+const distPath = path.join(__dirname, '../dist');
+
+app.use(express.static(distPath));
+
+// Catch-all handler for any request that doesn't match an API route
+// Sends index.html so React Router handles the routing
+app.get('*', (req, res) => {
+    res.sendFile(path.join(distPath, 'index.html'));
+});
+
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on http://0.0.0.0:${PORT}`);
 });
