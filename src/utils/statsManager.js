@@ -44,7 +44,7 @@ const syncProgress = async (updates, token) => {
     }
 };
 
-export const getWeakestLetters = async (limit = 5) => {
+export const getWeakestLetters = async () => {
     // This function would ideally fetch aggregated stats from backend 
     // or calculate from a local cache of stats.
     // For now, returning empty or fetching from an endpoint if needed.

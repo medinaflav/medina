@@ -1,12 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { ALPHABET, getLetter } from '../data/alphabet';
 import AudioButton from './common/AudioButton';
-import { getLetterForm } from '../utils/arabicForms';
-import { getVisualForm } from '../utils/arabicForms';
 import { recordAttempt } from '../utils/statsManager';
 import { playSuccessSound, playErrorSound } from '../utils/audio';
+import QuitConfirmationModal from './common/QuitConfirmationModal';
+import SessionComplete from './common/SessionComplete';
+import PracticeModeSelector from './LetterPractice/PracticeModeSelector';
+import StimulusDisplay from './LetterPractice/StimulusDisplay';
 
-export default function LetterPractice({ selectedLetters, onExit }) {
+import { getWeightedItem } from '../utils/adaptiveLearning';
+
+export default function LetterPractice({ selectedLetters, onExit, stats }) {
     // Mode Selection: null (setup), 'isolated', 'all'
     const [practiceMode, setPracticeMode] = useState(null);
 
@@ -36,32 +40,34 @@ export default function LetterPractice({ selectedLetters, onExit }) {
         setIsSessionComplete(false);
         setScore(0);
         setShowQuitConfirm(false);
+        generateQuestion(mode, []);
     };
 
-    const generateQuestion = () => {
-        // Pool: Uses ONLY selected letters (or full alphabet if none selected, but user requested selected only)
-        // NOTE: availableLetters logic moved to render for UI, but logic here needs it too.
-        // Replicating logic or using prop directly if consistent.
-        // Actually earlier code used `selectedLetters` prop.
-
-        // Consistent with earlier change: UI shows ALL, but questions can come from ALL too? 
-        // User said "Dans Formes Isolées et toutes les formes affiche toute les lettres" (In Isolated and All forms show all letters).
-        // This likely referred to the CHOICE grid.
-        // Does the QUESTION generation pool also change? 
-        // Typically practice is on selected letters. 
-        // Assuming Questions = Selected Letters (or All if empty), Choices = All Letters.
-
+    const generateQuestion = (currentMode = practiceMode, excludeIds = []) => {
         const poolIds = (selectedLetters && selectedLetters.length > 0)
             ? selectedLetters
             : ALPHABET.map(l => l.id);
 
         if (poolIds.length === 0) return;
 
-        const randomId = poolIds[Math.floor(Math.random() * poolIds.length)];
-        const letter = getLetter(randomId);
+        // Filter out letters already used in this session to prevent duplicates
+        // Only trigger this if there are enough remaining letters to pick from
+        const availablePoolIds = poolIds.filter(id => !excludeIds.includes(id));
+        const effectivePoolIds = availablePoolIds.length > 0 ? availablePoolIds : poolIds;
 
+        // Create pool of letter objects
+        const pool = effectivePoolIds.map(id => getLetter(id)).filter(Boolean);
+
+        // Adaptive Selection
+        const targetLetter = getWeightedItem(pool, stats, 'letter');
+
+        // Fallback random if something failed
+        const letter = targetLetter || getLetter(effectivePoolIds[Math.floor(Math.random() * effectivePoolIds.length)]);
+
+        // Select Form to Test
+        // If mode is 'all', random form. If 'isolated', isolated.
         let randomForm = 'isolated';
-        if (practiceMode === 'all') {
+        if (currentMode === 'all') {
             const forms = ['initial', 'medial', 'final', 'isolated'];
             randomForm = forms[Math.floor(Math.random() * forms.length)];
         }
@@ -71,18 +77,15 @@ export default function LetterPractice({ selectedLetters, onExit }) {
         setFeedback(null);
         setSelectedLetterId(null);
         // Reset form selection based on mode
-        if (practiceMode === 'all') {
+        if (currentMode === 'all') {
             setSelectedForm(null);
         } else {
             setSelectedForm('isolated');
         }
     };
 
-    useEffect(() => {
-        if (practiceMode && !isSessionComplete) {
-            generateQuestion();
-        }
-    }, [practiceMode]);
+    // Removed useEffect to avoid setState update loop on mount. Call generateQuestion in startSession instead.
+
 
     const handleValidate = () => {
         if (feedback) return;
@@ -109,7 +112,9 @@ export default function LetterPractice({ selectedLetters, onExit }) {
         setTimeout(() => {
             if (questionCount < SESSION_LENGTH - 1) {
                 setQuestionCount(c => c + 1);
-                generateQuestion();
+                // Calculate used IDs including the one just finished
+                const currentSessionUsedIds = [...sessionResults.map(r => r.letterId), newResult.letterId];
+                generateQuestion(undefined, currentSessionUsedIds);
             } else {
                 finishSession([...sessionResults, newResult]);
             }
@@ -136,125 +141,22 @@ export default function LetterPractice({ selectedLetters, onExit }) {
     // SETUP SCREEN
     if (!practiceMode) {
         return (
-            <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center', paddingTop: '2rem' }}>
-                <div style={{ textAlign: 'left', marginBottom: '1rem' }}>
-                    <button
-                        onClick={onExit}
-                        style={{
-                            background: 'none',
-                            border: 'none',
-                            fontSize: '1rem',
-                            color: 'var(--text-secondary)',
-                            cursor: 'pointer',
-                            display: 'flex', alignItems: 'center', gap: '0.5rem'
-                        }}
-                    >
-                        ← Retour
-                    </button>
-                </div>
-                <h2 style={{ color: 'var(--color-sand-900)', marginBottom: '2rem' }}>Choisissez votre entraînement</h2>
-
-                {(selectedLetters.length === 0) && (
-                    <div style={{
-                        backgroundColor: '#fee2e2', color: '#991b1b', padding: '1rem', borderRadius: '12px', marginBottom: '2rem'
-                    }}>
-                        Attention : Aucune lettre sélectionnée. Utilisation de l'alphabet complet.
-                    </div>
-                )}
-
-                <div style={{
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    justifyContent: 'center',
-                    gap: '2rem',
-                    marginBottom: '2rem'
-                }}>
-                    <button
-                        onClick={() => startSession('isolated')}
-                        style={{
-                            flex: '1 1 300px',
-                            maxWidth: '400px',
-                            padding: '2rem',
-                            fontSize: '1.2rem',
-                            backgroundColor: 'var(--bg-card)',
-                            color: 'var(--color-brown-text)',
-                            border: '1px solid var(--color-sand-200)',
-                            borderRadius: '24px',
-                            cursor: 'pointer',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            gap: '1rem',
-                            boxShadow: '0 4px 6px rgba(0,0,0,0.05)',
-                            transition: 'transform 0.2s'
-                        }}
-                    >
-                        <span style={{ fontSize: '3rem', color: 'var(--color-brown-text)' }}>ب</span>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                            <strong>Formes isolées</strong>
-                            <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', fontWeight: 'normal' }}>Identifiez uniquement les lettres de base.</span>
-                        </div>
-                    </button>
-
-                    <button
-                        onClick={() => startSession('all')}
-                        style={{
-                            flex: '1 1 300px',
-                            maxWidth: '400px',
-                            padding: '2rem',
-                            fontSize: '1.2rem',
-                            backgroundColor: 'var(--bg-card)',
-                            color: 'var(--color-brown-text)',
-                            border: '1px solid var(--color-sand-200)',
-                            borderRadius: '24px',
-                            cursor: 'pointer',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            gap: '1rem',
-                            boxShadow: '0 4px 6px rgba(0,0,0,0.05)',
-                            transition: 'transform 0.2s'
-                        }}
-                    >
-                        <span style={{ fontSize: '3rem', color: 'var(--color-brown-text)' }}>بـ ـبـ ـب</span>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                            <strong>Toutes les formes</strong>
-                            <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', fontWeight: 'normal' }}>Identifiez les formes Initiales, Médianes et Finales.</span>
-                        </div>
-                    </button>
-                </div>
-            </div>
+            <PracticeModeSelector
+                onSelectMode={startSession}
+                onExit={onExit}
+                selectedLettersCount={selectedLetters.length}
+            />
         );
     }
 
     if (isSessionComplete) {
         return (
-            <div style={{ maxWidth: '600px', margin: '4rem auto', textAlign: 'center', backgroundColor: 'var(--bg-card)', padding: '3rem', borderRadius: '24px', boxShadow: '0 10px 25px rgba(0,0,0,0.05)' }}>
-                <h2 style={{ fontSize: '2.5rem', marginBottom: '1rem', color: 'var(--color-gold-600)' }}>Session Terminée !</h2>
-                <div style={{ fontSize: '5rem', marginBottom: '1rem' }}>
-                    {score >= 8 ? '🎉' : score >= 5 ? '👍' : '💪'}
-                </div>
-                <p style={{ fontSize: '1.5rem', color: 'var(--color-brown-text)', marginBottom: '2rem' }}>
-                    Score : <strong>{score} / 10</strong>
-                </p>
-                <p style={{ color: 'var(--text-secondary)', marginBottom: '3rem' }}>
-                    Vos progrès ont été enregistrés.
-                </p>
-                <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
-                    <button
-                        onClick={() => setPracticeMode(null)}
-                        className="btn-secondary"
-                    >
-                        Menu Principal
-                    </button>
-                    <button
-                        onClick={() => startSession(practiceMode)}
-                        className="btn-primary"
-                    >
-                        Recommencer
-                    </button>
-                </div>
-            </div>
+            <SessionComplete
+                score={score}
+                total={SESSION_LENGTH}
+                onRetry={() => startSession(practiceMode)}
+                onExit={() => setPracticeMode(null)}
+            />
         );
     }
 
@@ -276,31 +178,12 @@ export default function LetterPractice({ selectedLetters, onExit }) {
             </div>
 
             {/* Stimulus Area */}
-            <div style={{
-                textAlign: 'center',
-                marginBottom: '2rem',
-                padding: '2rem',
-                backgroundColor: 'var(--bg-card)',
-                borderRadius: '24px',
-                boxShadow: '0 10px 30px -10px rgba(0,0,0,0.1)',
-                border: feedback === 'correct' ? '2px solid var(--color-emerald-500)'
-                    : feedback === 'incorrect' ? '2px solid var(--color-red-500)'
-                        : '1px solid var(--color-sand-200)',
-                transition: 'all 0.3s ease'
-            }}>
-                <div style={{ fontSize: '1rem', color: 'var(--text-secondary)', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '1px' }}>
-                    Identifiez cette lettre {practiceMode === 'all' ? '& forme' : ''}
-                </div>
-                <div style={{
-                    fontFamily: 'var(--font-arabic)',
-                    fontSize: '5rem',
-                    height: '100px',
-                    lineHeight: '100px',
-                    color: 'var(--color-brown-text)'
-                }}>
-                    {getVisualForm(target.char, targetForm)}
-                </div>
-            </div>
+            <StimulusDisplay
+                target={target}
+                targetForm={targetForm}
+                feedback={feedback}
+                practiceMode={practiceMode}
+            />
 
             <div className={`practice-layout ${practiceMode === 'all' ? 'practice-layout-sidebar' : ''}`}>
                 {/* 1. Letter Selection */}
@@ -445,46 +328,12 @@ export default function LetterPractice({ selectedLetters, onExit }) {
 
             {/* Quit Confirmation Modal */}
             {showQuitConfirm && (
-                <div style={{
-                    position: 'fixed',
-                    top: 0, left: 0, right: 0, bottom: 0,
-                    backgroundColor: 'rgba(0,0,0,0.5)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    zIndex: 1000
-                }}>
-                    <div style={{
-                        backgroundColor: 'var(--bg-card)',
-                        padding: '2rem',
-                        borderRadius: '16px',
-                        maxWidth: '400px',
-                        textAlign: 'center',
-                        boxShadow: '0 4px 20px rgba(0,0,0,0.2)'
-                    }}>
-                        <h3 style={{ marginBottom: '1rem', color: 'var(--color-brown-text)' }}>Voulez-vous vraiment quitter ?</h3>
-                        <p style={{ marginBottom: '2rem', color: 'var(--text-secondary)' }}>
-                            Votre progression pour cette session ne sera pas enregistrée.
-                        </p>
-                        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
-                            <button
-                                onClick={() => setShowQuitConfirm(false)}
-                                className="btn-secondary"
-                                style={{ flex: 1 }}
-                            >
-                                Annuler
-                            </button>
-                            <button
-                                onClick={confirmQuit} // Use confirmQuit here
-                                className="btn-danger"
-                                style={{ flex: 1 }}
-                            >
-                                Quitter
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                <QuitConfirmationModal
+                    onConfirm={confirmQuit}
+                    onCancel={() => setShowQuitConfirm(false)}
+                />
             )}
         </div>
     );
 }
+

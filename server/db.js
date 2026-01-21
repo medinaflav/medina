@@ -15,9 +15,25 @@ export async function getDb() {
       CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         username TEXT UNIQUE,
+        email TEXT UNIQUE,
+        google_id TEXT UNIQUE,
         password_hash TEXT,
+        is_verified BOOLEAN DEFAULT 0,
+        verification_token TEXT,
+        token_expires DATETIME,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
       );
+    `);
+
+    // Simple migration
+    // Robust migration - Try each column individually
+    try { await db.exec('ALTER TABLE users ADD COLUMN email TEXT UNIQUE'); } catch (e) { }
+    try { await db.exec('ALTER TABLE users ADD COLUMN google_id TEXT UNIQUE'); } catch (e) { }
+    try { await db.exec('ALTER TABLE users ADD COLUMN is_verified BOOLEAN DEFAULT 1'); } catch (e) { }
+    try { await db.exec('ALTER TABLE users ADD COLUMN verification_token TEXT'); } catch (e) { }
+    try { await db.exec('ALTER TABLE users ADD COLUMN token_expires DATETIME'); } catch (e) { }
+
+    await db.exec(`
 
       CREATE TABLE IF NOT EXISTS progress (
         id INTEGER PRIMARY KEY AUTOINCREMENT,

@@ -1,0 +1,34 @@
+.droppable-slot {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    border: 2px dashed var(--color-sand-300);
+    background-color: transparent;
+}
+
+.droppable-slot.is-filled {
+    border-style: solid;
+    /* Usually filled slots contain a tile which has its own border, but the slot itself might just be a container */
+}
+
+/* State Modifiers */
+.droppable-slot.is-correct {
+    border-color: var(--color-sand-200);
+    background-color: var(--color-emerald-500);
+    color: white;
+}
+
+.droppable-slot.is-error {
+    border-color: var(--color-red-500);
+}
+
+.droppable-slot.is-over {
+    border-color: var(--color-gold-400);
+    background-color: var(--color-sand-100);
+}
+
+/* When it's over AND correct (shouldn't happen simultaneously usually, but hierarchy matters) */

@@ -10,6 +10,7 @@ import {
 import DraggableTile from './DraggableTile';
 import DroppableSlot from './DroppableSlot';
 import { getLetter, ALPHABET } from '../data/alphabet';
+import './WordPuzzle.css';
 
 export default function WordPuzzle({ word, onStateChange, showFeedback, showVowels, isLocked, initialState }) {
     const [placedLetters, setPlacedLetters] = useState({}); // { slotIndex: tileId }
@@ -18,8 +19,7 @@ export default function WordPuzzle({ word, onStateChange, showFeedback, showVowe
 
     // Initialize/Reset
     useEffect(() => {
-        // If we have saved state for this word, restore it
-        // Check for length > 0 to avoid restoring premature empty state
+        // Restore state if provided
         if (initialState && initialState.shuffledTiles && initialState.shuffledTiles.length > 0 && initialState.wordText === word.text) {
             setShuffledTiles(initialState.shuffledTiles);
             setPlacedLetters(initialState.placedLetters || {});
@@ -33,40 +33,33 @@ export default function WordPuzzle({ word, onStateChange, showFeedback, showVowe
             type: 'correct'
         }));
 
-        // 2. Create distractors (3 unique random tiles)
-        const distractorCount = 3;
-        const distractorTiles = [];
+        // 2. Create distractors
+        // We want total tiles to be an even number
+        const correctCount = word.letters.length;
+        let distractorCount = 3; // Start with minimum 3
 
-        // Get all available letters that are NOT in the word
+        let totalNeeded = correctCount + distractorCount;
+        if (totalNeeded % 2 !== 0) {
+            distractorCount += 1; // Add 1 to make it even
+        }
+
         const availableDistractors = ALPHABET.filter(l => !word.letters.includes(l.id));
-
-        // Shuffle avilables
         const shuffledAvailable = [...availableDistractors].sort(() => Math.random() - 0.5);
-
-        // Take the first 3 (or fewer if not enough)
         const selectedDistractors = shuffledAvailable.slice(0, distractorCount);
 
-        selectedDistractors.forEach((letter, i) => {
-            distractorTiles.push({
-                id: `distractor-${letter.id}-${i}-${Math.random()}`,
-                letterId: letter.id,
-                type: 'distractor'
-            });
-        });
+        const distractorTiles = selectedDistractors.map((letter, i) => ({
+            id: `distractor-${letter.id}-${i}-${Math.random()}`,
+            letterId: letter.id,
+            type: 'distractor'
+        }));
 
         // 3. Combine and shuffle
-        const allTiles = [...correctTiles, ...distractorTiles].sort(() => Math.random() - 0.5);
-
-        setShuffledTiles(allTiles);
+        setShuffledTiles([...correctTiles, ...distractorTiles].sort(() => Math.random() - 0.5));
         setPlacedLetters({});
-    }, [word]);
+    }, [word, initialState]); // Added initialState to deps
 
     const sensors = useSensors(
-        useSensor(PointerSensor, {
-            activationConstraint: {
-                distance: 8,
-            },
-        })
+        useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
     );
 
     const handleDragStart = (event) => {
@@ -80,11 +73,11 @@ export default function WordPuzzle({ word, onStateChange, showFeedback, showVowe
         setActiveId(null);
 
         if (over) {
-            const slotIndex = over.id;
+            const slotIndex = parseInt(over.id); // Ensure index is int
             const tileId = active.id;
-            const draggedTile = shuffledTiles.find(t => t.id === tileId);
 
-            // Analytics Logic
+            // Analytics
+            const draggedTile = shuffledTiles.find(t => t.id === tileId);
             if (draggedTile) {
                 const expectedLetterId = word.letters[slotIndex];
                 const isCorrect = draggedTile.letterId === expectedLetterId;
@@ -92,17 +85,14 @@ export default function WordPuzzle({ word, onStateChange, showFeedback, showVowe
             }
 
             setPlacedLetters(prev => {
-                // Check if tile was already placed somewhere else, remove it from there
                 const existingSlot = Object.keys(prev).find(key => prev[key] === tileId);
-
                 const newPlacement = { ...prev };
                 if (existingSlot) delete newPlacement[existingSlot];
-
                 newPlacement[slotIndex] = tileId;
                 return newPlacement;
             });
         } else {
-            // Dropped outside -> return to dock
+            // Return to dock
             const tileId = active.id;
             setPlacedLetters(prev => {
                 const existingSlot = Object.keys(prev).find(key => prev[key] === tileId);
@@ -116,7 +106,7 @@ export default function WordPuzzle({ word, onStateChange, showFeedback, showVowe
         }
     };
 
-    // Check status and notify parent
+    // Check status
     useEffect(() => {
         const isFilled = word.letters.every((_, index) => placedLetters[index] !== undefined);
 
@@ -124,12 +114,7 @@ export default function WordPuzzle({ word, onStateChange, showFeedback, showVowe
             const placedTileId = placedLetters[index];
             const tile = shuffledTiles.find(t => t.id === placedTileId);
             const isCorrect = tile && tile.letterId === expectedId;
-            return {
-                index,
-                expectedId,
-                placedTileId,
-                isCorrect: !!isCorrect
-            };
+            return { index, expectedId, placedTileId, isCorrect: !!isCorrect };
         });
 
         const isCorrect = isFilled && results.every(r => r.isCorrect);
@@ -138,22 +123,20 @@ export default function WordPuzzle({ word, onStateChange, showFeedback, showVowe
             isFilled,
             isCorrect,
             results,
-            // Expose internal state for persistence
             shuffledTiles,
             placedLetters
         });
     }, [placedLetters, word, shuffledTiles, onStateChange]);
 
-    // Derived state for rendering
     const dockTiles = shuffledTiles.filter(tile => !Object.values(placedLetters).includes(tile.id));
     const activeTile = shuffledTiles.find(t => t.id === activeId);
 
     const handleTileClick = (tileId) => {
-        if (isLocked) return; // Locking check
+        if (isLocked) return;
 
-        // 1. Check if tile is already placed (click to remove)
         const placedSlotIndex = Object.keys(placedLetters).find(key => placedLetters[key] === tileId);
         if (placedSlotIndex) {
+            // Remove from slot
             setPlacedLetters(prev => {
                 const copy = { ...prev };
                 delete copy[placedSlotIndex];
@@ -162,104 +145,82 @@ export default function WordPuzzle({ word, onStateChange, showFeedback, showVowe
             return;
         }
 
-        // 2. Tile is in dock -> Place in first available empty slot (Right to Left check for Arabic)
+        // Place in first empty slot (RTL check handled by findIndex logic naturally? 
+        // findIndex scans 0..N. Word is displayed RTL visually but array is 0..N.
+        // 0 is the start of the word (Rightmost in Arabic). 
+        // So checking 0 first is correct for "First available letter from start of word".
         const emptySlotIndex = word.letters.findIndex((_, index) => !placedLetters[index]);
 
         if (emptySlotIndex !== -1) {
-            setPlacedLetters(prev => ({
-                ...prev,
-                [emptySlotIndex]: tileId
-            }));
-
-            // Analytics logic for click-placement
-            const draggedTile = shuffledTiles.find(t => t.id === tileId);
-            if (draggedTile) {
-                const expectedLetterId = word.letters[emptySlotIndex];
-                const isCorrect = draggedTile.letterId === expectedLetterId;
-                // recordAttempt(expectedLetterId, emptySlotIndex, isCorrect);
-            }
+            setPlacedLetters(prev => ({ ...prev, [emptySlotIndex]: tileId }));
         }
     };
 
-    return (
-        <DndContext
-            sensors={sensors}
-            onDragStart={handleDragStart}
-            onDragEnd={handleDragEnd}
-        >
-            {/* ... */}
-            <div style={{ maxWidth: '1000px', margin: '0 auto', textAlign: 'center' }}>
-                <h3 className="arabic-title-mobile" style={{
-                    fontFamily: 'var(--font-arabic)',
-                    fontSize: '5rem', // Default for desktop
-                    marginBottom: '1rem',
-                    color: 'var(--color-brown-text)',
-                    lineHeight: 1.2
-                }}>
-                    {showVowels ? (word.vocalizedText || word.text) : word.text}
-                </h3>
+    // Derived Logic for Success/Feedback display
+    const isAllFilled = word.letters.every((_, index) => placedLetters[index]);
+    const isAllCorrect = isAllFilled && word.letters.every((expectedId, index) => {
+        const tileId = placedLetters[index];
+        const tile = shuffledTiles.find(t => t.id === tileId);
+        return tile && tile.letterId === expectedId;
+    });
+    const isErrorFeedback = showFeedback && !isAllCorrect;
+    const isSuccessFeedback = (isLocked || (showFeedback && isAllCorrect)) && !isErrorFeedback;
 
-                <div style={{ marginBottom: '2rem', color: 'var(--text-secondary)' }}>
-                    Associez les phonétiques au mot arabe
+    return (
+        <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+            <div className="puzzle-container" style={{ maxWidth: '1000px', margin: '0 auto', textAlign: 'center' }}>
+                {/* Word Display */}
+                <div className="puzzle-word-display">
+                    <h3 className="puzzle-main-word">
+                        {showVowels ? (word.vocalizedText || word.text) : word.text}
+                    </h3>
+                    <div className="puzzle-instruction">Associez les phonétiques au mot arabe</div>
                 </div>
 
-                {showFeedback && (
-                    <div className="fade-in" style={{
-                        marginBottom: '2rem',
-                        padding: '1rem',
-                        backgroundColor: '#FEE2E2',
-                        borderRadius: '12px',
-                        color: '#DC2626',
-                        display: !Object.values(placedLetters).every((tileId, index) => {
-                            const tile = shuffledTiles.find(t => t.id === tileId);
-                            return tile && tile.letterId === word.letters[index];
-                        }) ? 'block' : 'none',
-                    }}>
-                        <div style={{ fontSize: '0.9rem', marginBottom: '1rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Correction</div>
-
-                        {/* Decomposed Correction */}
-                        <div style={{
-                            display: 'flex',
-                            flexDirection: 'row-reverse', // Arabic R to L
-                            justifyContent: 'center',
-                            gap: '1.5rem'
-                        }}>
+                {/* Feedback: ERROR */}
+                {isErrorFeedback && (
+                    <div className="feedback-box feedback-error fade-in">
+                        <div className="feedback-label">Correction</div>
+                        <div className="correction-grid">
                             {word.letters.map((id, index) => {
                                 const letter = getLetter(id);
                                 return (
-                                    <div key={index} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.2rem' }}>
-                                        <span style={{ fontFamily: 'var(--font-arabic)', fontSize: '2.5rem', lineHeight: 1 }}>{letter.char}</span>
-                                        <span style={{ fontFamily: 'var(--font-ui)', fontSize: '1.1rem', fontWeight: 'bold' }}>{letter.transliteration}</span>
+                                    <div key={index} className="correction-item">
+                                        <span className="correction-char">{letter.char}</span>
+                                        <span className="correction-translit">{letter.transliteration}</span>
                                     </div>
                                 )
                             })}
                         </div>
-
-                        {/* Full Word Transliteration */}
-                        <div style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid rgba(220, 38, 38, 0.2)' }}>
-                            <span style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '1px', display: 'block', marginBottom: '0.25rem', opacity: 0.8 }}>MOT</span>
-                            <span style={{ fontFamily: 'var(--font-ui)', fontSize: '1.8rem', fontWeight: 'bold' }}>{word.transliteration}</span>
+                        <div className="translation-section">
+                            <span className="translation-label">TRADUCTION</span>
+                            <span className="translation-text">{word.transliteration}</span>
+                        </div>
+                        <div style={{ marginTop: '0.5rem' }}>
+                            <span className="translation-meaning">"{word.translation}"</span>
                         </div>
                     </div>
                 )}
 
-                {/* Droppable Slots (Right to Left for Arabic) */}
-                <div style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    gap: '1rem',
-                    marginBottom: '3rem',
-                    flexDirection: 'row-reverse' // Arabic order
-                }}>
+                {/* Feedback: SUCCESS / LOCKED */}
+                {isSuccessFeedback && (
+                    <div className="feedback-box feedback-success fade-in">
+                        <div style={{ fontFamily: 'var(--font-ui)', fontSize: '1.2rem', fontStyle: 'italic', color: 'var(--text-secondary)' }}>
+                            <span className="translation-label">TRADUCTION</span>
+                            "{word.translation}"
+                            {/* <span className="block mt-2 font-bold text-xl">{word.transliteration}</span> if needed */}
+                        </div>
+                    </div>
+                )}
+
+                {/* Droppable Slots */}
+                <div className="slots-container">
                     {word.letters.map((expectedId, index) => {
                         const placedTileId = placedLetters[index];
                         const placedTile = placedTileId ? shuffledTiles.find(t => t.id === placedTileId) : null;
                         const letterInfo = placedTile ? getLetter(placedTile.letterId) : null;
-
-                        // Check if this specific slot is correct
                         const isCorrectTile = placedTile && placedTile.letterId === expectedId;
 
-                        // Derived Feedback Props
                         const isCorrect = showFeedback && isCorrectTile;
                         const isError = showFeedback && placedTile && !isCorrectTile;
 
@@ -269,10 +230,18 @@ export default function WordPuzzle({ word, onStateChange, showFeedback, showVowe
                                 id={index}
                                 isCorrect={isCorrect}
                                 isError={isError}
-                                onClick={() => (!isLocked && placedTile) ? handleTileClick(placedTile.id) : null} // Allow clicking slot to remove
+                                onClick={() => (!isLocked && placedTile) ? handleTileClick(placedTile.id) : null}
                             >
                                 {placedTile && letterInfo && (
-                                    <div onClick={() => (!isLocked) ? handleTileClick(placedTile.id) : null} style={{ cursor: isLocked ? 'default' : 'pointer' }}>
+                                    <div
+                                        onClick={(e) => {
+                                            if (!isLocked) {
+                                                e.stopPropagation(); // Prevent slot click? Actually slot click handles it too.
+                                                handleTileClick(placedTile.id);
+                                            }
+                                        }}
+                                        style={{ cursor: isLocked ? 'default' : 'pointer' }}
+                                    >
                                         <DraggableTile
                                             id={placedTile.id}
                                             char={letterInfo.transliteration}
@@ -289,22 +258,24 @@ export default function WordPuzzle({ word, onStateChange, showFeedback, showVowe
                 </div>
 
                 {/* Source Dock */}
-                <div style={{
-                    minHeight: '80px',
-                    padding: '1rem',
-                    backgroundColor: 'var(--color-sand-100)',
-                    borderRadius: '16px',
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    justifyContent: 'center',
-                    gap: '1rem',
-                    opacity: 1, // Keep full opacity even when locked
-                    pointerEvents: isLocked ? 'none' : 'auto',
-                    maxWidth: '600px',
-                    margin: '0 auto'
-                }}>
-                    {dockTiles.map((tile) => {
+                <div
+                    className={`tile-dock ${isLocked ? 'locked' : ''}`}
+                    data-count={shuffledTiles.length}
+                >
+                    {shuffledTiles.map((tile) => {
+                        const isPlaced = Object.values(placedLetters).includes(tile.id);
                         const letter = getLetter(tile.letterId);
+
+                        if (isPlaced) {
+                            return (
+                                <div
+                                    key={tile.id}
+                                    className="draggable-tile placeholder"
+                                    style={{ visibility: 'hidden', cursor: 'default' }}
+                                />
+                            );
+                        }
+
                         return (
                             <DraggableTile
                                 key={tile.id}
@@ -318,9 +289,8 @@ export default function WordPuzzle({ word, onStateChange, showFeedback, showVowe
                             />
                         );
                     })}
-                    {dockTiles.length === 0 && (
-                        // Should rarely happen with distractors unless user places everything
-                        <div style={{ color: 'var(--text-secondary)', alignSelf: 'center' }}>
+                    {shuffledTiles.every(t => Object.values(placedLetters).includes(t.id)) && (
+                        <div className="dock-empty-msg" style={{ position: 'absolute' }}>
                             Toutes les tuiles placées
                         </div>
                     )}

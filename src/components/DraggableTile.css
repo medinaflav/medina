@@ -1,0 +1,45 @@
+.draggable-tile {
+    width: 60px;
+    height: 60px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-sand-50);
+    border: 2px solid var(--color-gold-main);
+    border-radius: 12px;
+    font-family: var(--font-ui);
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: var(--color-brown-dark);
+    cursor: grab;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.2s, opacity 0.2s;
+    touch-action: none;
+    user-select: none;
+}
+
+.draggable-tile:active {
+    cursor: grabbing;
+}
+
+.draggable-tile.is-dragging {
+    cursor: grabbing;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+    opacity: 0.8;
+    z-index: 1000;
+}
+
+.draggable-tile.disabled {
+    cursor: default;
+    opacity: 1;
+    /* Override default disabled opacity if needed */
+}
+
+/* Audio Button Positioning */
+.tile-audio-btn {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    z-index: 10;
+}

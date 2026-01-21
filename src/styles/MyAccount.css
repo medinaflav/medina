@@ -1,0 +1,204 @@
+/* Inherit base variables from index.css and reuse auth styles where possible */
+
+.my-account-container {
+    min-height: 100vh;
+    padding: 2rem 0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    /* Space for fixed navbar */
+}
+
+/* Reusing Auth Card style for consistency */
+.my-account-card {
+    /* background: rgba(255, 255, 255, 0.85); */
+    /* backdrop-filter: blur(20px); */
+    /* -webkit-backdrop-filter: blur(20px); */
+    /* border: 1px solid rgba(255, 255, 255, 0.4); */
+    /* border-radius: 32px; */
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 600px;
+    /* box-shadow: */
+    /* 0 20px 40px -10px rgba(74, 64, 54, 0.1), */
+    /* 0 0 0 1px rgba(255, 255, 255, 0.5) inset; */
+    /* animation: fadeInUp 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards; */
+}
+
+[data-theme='dark'] .my-account-card {
+    background: rgba(45, 36, 28, 0.8);
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+.my-account-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    position: relative;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--color-sand-200);
+}
+
+[data-theme='dark'] .my-account-header {
+    border-bottom-color: rgba(255, 255, 255, 0.05);
+}
+
+.my-account-title-gold {
+    font-family: var(--font-header);
+    color: var(--color-gold-main);
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.my-account-avatar {
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, var(--color-gold-main), #b45309);
+    border-radius: 50%;
+    margin: 0 auto 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: white;
+    font-family: var(--font-arabic);
+    box-shadow: 0 10px 20px rgba(180, 83, 9, 0.3);
+    border: 4px solid rgba(255, 255, 255, 0.8);
+}
+
+.my-account-username {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-brown-text);
+    margin-bottom: 0.5rem;
+    font-family: var(--font-header);
+    letter-spacing: -0.5px;
+}
+
+[data-theme='dark'] .my-account-username {
+    color: var(--color-gold-light);
+}
+
+.my-account-email {
+    color: var(--color-sand-500);
+    font-size: 0.95rem;
+}
+
+/* Sections */
+.my-account-section {
+    margin-bottom: 2rem;
+}
+
+.my-account-section-title {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--color-sand-500);
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.my-account-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 16px;
+    margin-bottom: 0.5rem;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+}
+
+[data-theme='dark'] .my-account-info-row {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.my-account-info-row:hover {
+    background: rgba(255, 255, 255, 0.8);
+    border-color: var(--color-sand-200);
+    transform: translateX(5px);
+}
+
+[data-theme='dark'] .my-account-info-row:hover {
+    background: rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.info-label {
+    color: var(--color-brown-text);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+[data-theme='dark'] .info-label {
+    color: var(--color-sand-100);
+}
+
+.info-value {
+    color: var(--color-brown-dark);
+    font-weight: 600;
+}
+
+[data-theme='dark'] .info-value {
+    color: var(--color-gold-main);
+}
+
+/* Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.stat-box {
+    background: linear-gradient(135deg, rgba(197, 160, 40, 0.1), rgba(197, 160, 40, 0.05));
+    padding: 1.5rem;
+    border-radius: 20px;
+    border: 1px solid rgba(197, 160, 40, 0.2);
+    text-align: center;
+}
+
+.stat-number {
+    display: block;
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--color-gold-main);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    color: var(--color-brown-text);
+    font-weight: 500;
+}
+
+[data-theme='dark'] .stat-label {
+    color: var(--color-sand-200);
+}
+
+.btn-logout {
+    width: 100%;
+    padding: 1rem;
+    border-radius: 12px;
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--color-red-danger);
+    font-weight: 600;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.btn-logout:hover {
+    background: rgba(239, 68, 68, 0.15);
+    transform: translateY(-2px);
+}

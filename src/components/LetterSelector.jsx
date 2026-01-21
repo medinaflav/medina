@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { ALPHABET } from '../data/alphabet';
-import { getVisualForm } from '../utils/arabicForms';
-import AudioButton from './common/AudioButton';
+import LetterCard from './LetterSelector/LetterCard';
+import LetterPreviewModal from './LetterSelector/LetterPreviewModal';
+import LetterTypeExplanations from './LetterSelector/LetterTypeExplanations';
+import './LetterSelector.css';
 
 // Define SOLAR_LETTERS (Shamsi)
-// T, Th, D, Dh, R, Z, S, Sh, S (emph), D (emph), T (emph), Z (emph), L, N
 const SOLAR_LETTERS = new Set([
     'ta', 'tha', 'dal', 'dhal', 'ra', 'zay', 'sin', 'shin',
     'sad', 'dad', 'ta_emph', 'za_emph', 'lam', 'nun'
@@ -15,7 +16,6 @@ export default function LetterSelector({ selectedLetters, onSelectionChange }) {
     const [showSunMoon, setShowSunMoon] = useState(false);
     const [previewLetter, setPreviewLetter] = useState(null);
     const [isSelectionMode, setIsSelectionMode] = useState(false);
-    const [playingLetter, setPlayingLetter] = useState(null);
 
     const toggleLetter = (id) => {
         if (selectedLetters.includes(id)) {
@@ -33,98 +33,76 @@ export default function LetterSelector({ selectedLetters, onSelectionChange }) {
         }
     };
 
+    const handleSave = () => {
+        const token = localStorage.getItem('token');
+        if (!token) return;
+
+        fetch('/api/settings', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token} `
+            },
+            body: JSON.stringify({ selectedLetters })
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    toast.success('Lettres sauvegardées !');
+                    setIsSelectionMode(false);
+                } else {
+                    toast.error('Erreur lors de la sauvegarde');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                toast.error('Erreur réseau lors de la sauvegarde');
+            });
+    };
+
     return (
         <div className="letter-selector">
-            <div style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'end',
-                marginBottom: '2rem',
-                flexWrap: 'wrap',
-                gap: '1rem'
-            }}>
-                <div style={{ textAlign: 'left' }}>
-                    <h2 style={{ color: 'var(--color-brown-text)', marginBottom: '0.2rem', margin: 0, fontSize: '1.8rem' }}>Les lettres à apprendre</h2>
-                    <p style={{ color: '#6b7280', margin: 0, fontSize: '0.9rem' }}>
+            <div className="selector-header">
+                <div className="selector-title-block">
+                    <h2 className="selector-title">Les lettres à apprendre</h2>
+                    <p className="selector-subtitle">
                         Sélectionnez les lettres que vous souhaitez apprendre
                     </p>
-                    <div style={{ flex: 1, textAlign: 'left', marginTop: '1rem', fontSize: '1rem', color: 'var(--text-secondary)' }}>
-                        <strong style={{ color: 'var(--color-gold-600)', fontSize: '1.2rem' }}>{selectedLetters.length}</strong> lettres selectionnées
+                    <div className="selector-count">
+                        <strong>{selectedLetters.length}</strong> lettres selectionnées
                     </div>
                 </div>
 
-                <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                <div className="selector-controls">
                     {!isSelectionMode ? (
                         <button
                             onClick={() => setIsSelectionMode(true)}
-                            style={{
-                                padding: '0.6rem 1.5rem',
-                                backgroundColor: 'var(--color-gold-main)',
-                                border: 'none',
-                                borderRadius: '50px',
-                                cursor: 'pointer',
-                                color: 'white',
-                                display: 'flex',
-                                gap: '0.5rem',
-                                alignItems: 'center',
-                                fontSize: '1rem',
-                                fontWeight: 'bold',
-                                transition: 'all 0.2s',
-                                boxShadow: '0 4px 6px rgba(197, 160, 40, 0.3)'
-                            }}
+                            className="btn-select-mode"
                         >
                             Selectionner
                         </button>
                     ) : (
                         <button
                             onClick={() => setIsSelectionMode(false)}
-                            style={{
-                                padding: '0.6rem 1.5rem',
-                                backgroundColor: '#fef2f2',
-                                border: '1px solid #fee2e2',
-                                borderRadius: '50px',
-                                cursor: 'pointer',
-                                color: '#dc2626',
-                                fontSize: '1rem',
-                                fontWeight: 'bold'
-                            }}
+                            className="btn-cancel-mode"
                         >
                             Annuler
                         </button>
                     )}
 
                     {/* Toggle Switch */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
-                        <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', fontWeight: '500' }}>
+                    <div className="toggle-group">
+                        <span className="toggle-label">
                             {showSunMoon ? 'Lunaires/Solaires' : 'Lunaires/Solaires'}
                         </span>
-                        <label style={{ position: 'relative', display: 'inline-block', width: '44px', height: '24px', cursor: 'pointer' }}>
+                        <label className="toggle-switch"> {/* Using shared toggle style from GameArea if available, or redefining in CSS */}
                             <input
                                 type="checkbox"
                                 checked={showSunMoon}
                                 onChange={() => setShowSunMoon(!showSunMoon)}
-                                style={{ opacity: 0, width: 0, height: 0 }}
+                                className="toggle-input"
                             />
-                            <span style={{
-                                position: 'absolute',
-                                cursor: 'pointer',
-                                top: 0, left: 0, right: 0, bottom: 0,
-                                backgroundColor: showSunMoon ? 'var(--color-gold-main)' : '#ccc',
-                                transition: '.4s',
-                                borderRadius: '34px'
-                            }}></span>
-                            <span style={{
-                                position: 'absolute',
-                                content: '""',
-                                height: '20px',
-                                width: '20px',
-                                left: showSunMoon ? '22px' : '2px',
-                                bottom: '2px',
-                                backgroundColor: 'white',
-                                transition: '.4s',
-                                borderRadius: '50%',
-                                boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
-                            }}></span>
+                            <span className="toggle-slider"></span>
                         </label>
                     </div>
                 </div>
@@ -137,260 +115,42 @@ export default function LetterSelector({ selectedLetters, onSelectionChange }) {
                     const isSolar = SOLAR_LETTERS.has(letter.id);
 
                     return (
-                        <div
+                        <LetterCard
                             key={letter.id}
+                            letter={letter}
+                            isSelected={isSelected}
+                            isSolar={isSolar}
+                            showSunMoonType={showSunMoon}
                             onClick={() => handleCardClick(letter)}
-                            className={`card ${isSelected ? 'selected' : ''} `}
-                            style={{
-                                cursor: 'pointer',
-                                textAlign: 'center',
-                                border: isSelected ? '2px solid var(--color-gold-main)' : '2px solid transparent',
-                                backgroundColor: 'var(--bg-card)',
-                                transform: isSelected ? 'scale(1.02)' : 'scale(1)',
-                                transition: 'all 0.2s ease',
-                                position: 'relative',
-                                borderRadius: '24px',
-                                height: '160px', /* Increased height slightly for spacing */
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                boxShadow: isSelected ? '0 4px 15px rgba(217, 119, 6, 0.15)' : '0 2px 5px rgba(0,0,0,0.05)',
-                            }}
-                        >
-                            {/* Type Icon (Sun/Moon) */}
-                            {showSunMoon && (
-                                <div style={{
-                                    position: 'absolute',
-                                    top: '12px',
-                                    left: '12px',
-                                    fontSize: '14px',
-                                    opacity: 0.8
-                                }} title={isSolar ? 'Lettre Solaire (Shamsiyya)' : 'Lettre Lunaire (Qamariyya)'}>
-                                    {isSolar ? '☀️' : '🌙'}
-                                </div>
-                            )}
-
-                            {/* Audio Icon (Standardized) */}
-                            <AudioButton
-                                textToSpeak={letter.arabicName || letter.char}
-                                size="40px"
-                                style={{
-                                    position: 'absolute',
-                                    top: '8px',
-                                    right: '8px',
-                                    zIndex: 5
-                                }}
-                            />
-
-                            <div style={{
-                                fontFamily: 'var(--font-arabic)',
-                                fontSize: '3.5rem',
-                                color: 'var(--color-brown-text)',
-                                marginTop: '-1.5rem',
-                                lineHeight: 2
-                            }}>
-                                {letter.char}
-                            </div>
-                            <div style={{
-                                fontSize: '1rem',
-                                color: isSelected ? 'var(--color-gold-main)' : 'var(--text-secondary)', /* Conditional color */
-                                fontWeight: '500'
-                            }}>
-                                {letter.name}
-                            </div>
-                        </div>
+                        />
                     );
                 })}
             </div >
 
             {/* Letter Preview Modal */}
-            {
-                previewLetter && (
-                    <div style={{
-                        position: 'fixed',
-                        top: 0, left: 0, right: 0, bottom: 0,
-                        backgroundColor: 'rgba(0,0,0,0.6)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        zIndex: 1000
-                    }} onClick={() => setPreviewLetter(null)}>
-                        <div style={{
-                            backgroundColor: 'var(--bg-card)',
-                            padding: '2rem',
-                            borderRadius: '24px',
-                            width: '90%',
-                            maxWidth: '500px',
-                            position: 'relative',
-                            textAlign: 'center'
-                        }} onClick={e => e.stopPropagation()}>
-                            <h2 style={{ fontFamily: 'var(--font-arabic)', fontSize: '4rem', color: 'var(--color-brown-text)', margin: 0, lineHeight: 1 }}>
-                                {previewLetter.char}
-                            </h2>
-                            <h3 style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', marginBottom: '2rem' }}>
-                                {previewLetter.name}
-                            </h3>
-
-                            <div style={{
-                                display: 'grid',
-                                gridTemplateColumns: 'repeat(4, 1fr)',
-                                gap: '1rem',
-                                marginBottom: '2rem'
-                            }}>
-                                {['isolated', 'initial', 'medial', 'final'].map(form => (
-                                    <div key={form} style={{
-                                        padding: '1rem 0.5rem',
-                                        backgroundColor: 'var(--color-sand-50)',
-                                        borderRadius: '12px',
-                                        border: '1px solid var(--color-sand-200)'
-                                    }}>
-                                        <div style={{
-                                            fontFamily: 'var(--font-arabic)',
-                                            fontSize: '2.5rem',
-                                            color: 'var(--color-gold-600)',
-                                            height: '60px',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center'
-                                        }}>
-                                            {getVisualForm(previewLetter.char, form)}
-                                        </div>
-                                        <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', textTransform: 'capitalize', marginTop: '0.5rem' }}>
-                                            {form}
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-
-                            <button
-                                onClick={() => setPreviewLetter(null)}
-                                style={{
-                                    padding: '0.8rem 2rem',
-                                    backgroundColor: 'var(--color-sand-200)',
-                                    color: 'var(--color-sand-900)',
-                                    border: 'none',
-                                    borderRadius: '50px',
-                                    cursor: 'pointer',
-                                    fontWeight: 'bold'
-                                }}
-                            >
-                                Fermer
-                            </button>
-                        </div>
-                    </div>
-                )
-            }
+            <LetterPreviewModal
+                letter={previewLetter}
+                onClose={() => setPreviewLetter(null)}
+            />
 
             {/* Sticky Action Footer */}
-            {
-                isSelectionMode && (
-                    <div style={{
-                        position: 'fixed',
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                        backdropFilter: 'blur(12px)',
-                        borderTop: '1px solid rgba(223, 219, 219, 0.05)',
-                        padding: '1.5rem',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        zIndex: 100,
-                        boxShadow: '0 -4px 20px rgba(0,0,0,0.05)'
-                    }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '2rem', width: '100%', maxWidth: '600px' }}>
-                            <button
-                                onClick={() => {
-                                    const token = localStorage.getItem('token');
-                                    if (!token) return;
-
-                                    fetch('/api/settings', {
-                                        method: 'POST',
-                                        headers: {
-                                            'Content-Type': 'application/json',
-                                            'Authorization': `Bearer ${token} `
-                                        },
-                                        body: JSON.stringify({ selectedLetters })
-                                    })
-                                        .then(res => res.json())
-                                        .then(data => {
-                                            if (data.success) {
-                                                if (typeof toast !== 'undefined') {
-                                                    toast.success('Lettres sauvegardées !');
-                                                } else {
-                                                    toast('Lettres sauvegardées !');
-                                                }
-                                                setIsSelectionMode(false); // Stop selection mode after save
-                                            } else {
-                                                if (typeof toast !== 'undefined') {
-                                                    toast.error('Erreur lors de la sauvegarde');
-                                                } else {
-                                                    toast('Erreur lors de la sauvegarde');
-                                                }
-                                            }
-                                        })
-                                        .catch(err => {
-                                            console.error(err);
-                                            toast('Erreur réseau lors de la sauvegarde');
-                                        });
-                                }}
-                                className="btn-primary"
-                                style={{
-                                    flex: 2,
-                                    display: localStorage.getItem('token') ? 'flex' : 'none',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    gap: '0.5rem',
-                                    padding: '1rem 2rem',
-                                    fontSize: '1.1rem'
-                                }}
-                            >
-                                Enregistrer
-                            </button>
-                        </div>
-                    </div>
-                )
-            }
-
-            {/* Letter Type Explanations */}
-            <div className="fade-in" style={{
-                marginTop: '4rem',
-                padding: '2rem',
-                backgroundColor: 'var(--color-sand-50)',
-                borderRadius: '16px',
-                border: '1px solid var(--color-sand-200)',
-                color: 'var(--color-sand-900)'
-            }}>
-                <h3 style={{ marginBottom: '1.5rem', color: 'var(--color-gold-600)' }}>Comprendre les types de lettres</h3>
-
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2rem' }}>
-                    <div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem', fontWeight: 'bold' }}>
-                            <span style={{ fontSize: '1.5rem' }}>☀️</span>
-                            <span>Lettres Solaires (Shamsiyya)</span>
-                        </div>
-                        <p style={{ fontSize: '0.95rem', lineHeight: '1.6', color: 'var(--text-secondary)' }}>
-                            Le 'L' de l'article <em>(Al-)</em> ne se prononce pas, il fusionne avec la lettre qui suit en la doublant.
-                            <br />
-                            <span style={{ fontSize: '0.9rem', opacity: 0.8 }}>Ex: Al-Shams → <strong>Ash-Shams</strong></span>
-                        </p>
-                    </div>
-
-                    <div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem', fontWeight: 'bold' }}>
-                            <span style={{ fontSize: '1.5rem' }}>🌙</span>
-                            <span>Lettres Lunaires (Qamariyya)</span>
-                        </div>
-                        <p style={{ fontSize: '0.95rem', lineHeight: '1.6', color: 'var(--text-secondary)' }}>
-                            Le 'L' de l'article <em>(Al-)</em> se prononce distinctement.
-                            <br />
-                            <span style={{ fontSize: '0.9rem', opacity: 0.8 }}>Ex: <strong>Al-Qamar</strong></span>
-                        </p>
+            {isSelectionMode && (
+                <div className="sticky-footer fade-in">
+                    <div className="sticky-footer-content">
+                        <button
+                            onClick={handleSave}
+                            className="btn-primary btn-save"
+                            style={{ display: localStorage.getItem('token') ? 'flex' : 'none' }}
+                        >
+                            Enregistrer
+                        </button>
                     </div>
                 </div>
-            </div>
+            )}
+
+            {/* Letter Type Explanations */}
+            <LetterTypeExplanations />
         </div >
     );
 }
+

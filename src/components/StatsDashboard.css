@@ -1,0 +1,206 @@
+/* Dashboard Layout */
+.stats-dashboard {
+    padding-bottom: 2rem;
+}
+
+.stats-title {
+    font-family: var(--font-ui);
+    color: var(--color-brown-text);
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    font-weight: 800;
+}
+
+/* Summary Grid */
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+/* Accuracy Card */
+.accuracy-card {
+    padding: 2rem;
+    text-align: center;
+    border: none;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.accuracy-label {
+    color: #6b7280;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.accuracy-value {
+    font-size: 4rem;
+    font-weight: 800;
+    color: var(--color-green-success);
+    line-height: 1;
+}
+
+/* Review Card */
+.review-card {
+    background-color: #FEF2F2;
+    /* bg-danger-light approximation if var not defined, else var(--bg-danger-light) */
+    border-radius: 16px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    justify-content: center;
+    border: 1px solid var(--color-red-500);
+}
+
+.review-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--color-red-500);
+    font-weight: 800;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.review-icon {
+    font-size: 1.2rem;
+}
+
+.review-content {
+    color: var(--color-sand-500);
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+/* Detailed Stats Section */
+.stats-subtitle {
+    color: var(--color-brown-text);
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.letters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+}
+
+.letter-stats-card {
+    padding: 1.5rem;
+    border: none;
+    text-align: center;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    transition: all 0.2s;
+}
+
+.letter-char {
+    font-family: var(--font-arabic);
+    font-size: 2rem;
+    color: var(--color-brown-text);
+}
+
+.letter-name {
+    font-size: 0.9rem;
+    color: #4b5563;
+    font-weight: 500;
+}
+
+.progress-track {
+    height: 4px;
+    width: 40px;
+    background-color: #f3f4f6;
+    margin: 0.5rem auto;
+    border-radius: 2px;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    transition: width 0.3s ease;
+}
+
+.score-text {
+    font-size: 0.8rem;
+    color: #6b7280;
+    font-weight: bold;
+}
+
+/* Modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.1s;
+}
+
+.modal-content {
+    background-color: var(--bg-card);
+    padding: 2rem;
+    border-radius: 24px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.modal-title {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: var(--color-brown-text);
+}
+
+.forms-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.form-stat-item {
+    padding: 0.8rem;
+    background-color: var(--color-sand-50);
+    border-radius: 12px;
+    text-align: center;
+}
+
+.form-char {
+    font-family: var(--font-arabic);
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.form-name {
+    font-size: 0.8rem;
+    color: #6b7280;
+    text-transform: capitalize;
+}
+
+.form-rate {
+    font-weight: bold;
+}
+
+.form-count {
+    font-size: 0.8em;
+    font-weight: normal;
+    opacity: 0.7;
+}
+
+.modal-close-btn {
+    width: 100%;
+    margin-top: 1.5rem;
+}

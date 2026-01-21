@@ -1,0 +1,78 @@
+.letter-type-card {
+    margin-top: 4rem;
+    padding: 2rem;
+    background-color: var(--color-gold-main);
+    border-radius: 16px;
+
+    /* User Request: White text in Light Mode, Brown text in Night Mode */
+    color: white;
+
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Dark Mode Override */
+[data-theme='dark'] .letter-type-card {
+    color: var(--color-brown-dark);
+}
+
+.letter-type-card h3 {
+    margin-bottom: 2rem;
+    font-size: 1.5rem;
+    font-weight: 800;
+    /* Extra bold like screenshot */
+    color: inherit;
+    opacity: 0.9;
+}
+
+.letter-type-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    /* Reduced from 280px to fit 320px screens */
+    gap: 3rem;
+}
+
+.letter-type-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.letter-type-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    font-size: 1.2rem;
+}
+
+.letter-type-icon {
+    font-size: 1.8rem;
+}
+
+.letter-type-content {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    font-weight: 500;
+    opacity: 0.95;
+}
+
+.letter-type-example {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: 0.95rem;
+    opacity: 0.85;
+    font-weight: 600;
+}
+
+@media (max-width: 600px) {
+    .letter-type-card {
+        padding: 1rem;
+        margin-top: 3rem;
+    }
+
+    .letter-type-grid {
+        gap: 2rem;
+    }
+}

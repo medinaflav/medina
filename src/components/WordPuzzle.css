@@ -1,0 +1,242 @@
+/* Word Display */
+.puzzle-word-display {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.puzzle-main-word {
+    font-family: var(--font-arabic);
+    font-size: 5rem;
+    margin-bottom: 1rem;
+    color: var(--color-brown-text);
+    line-height: 1.2;
+}
+
+@media (max-width: 768px) {
+    .puzzle-main-word {
+        font-size: 3rem;
+        /* Slightly smaller */
+        word-break: break-word;
+        /* Ensure wrapping if extremely long */
+    }
+}
+
+@media (max-width: 480px) {
+    .puzzle-main-word {
+        font-size: 2.5rem;
+        /* Even smaller for mobile */
+    }
+}
+
+.puzzle-instruction {
+    margin-bottom: 2rem;
+    color: var(--color-sand-500);
+}
+
+/* Feedback Sections */
+.feedback-box {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    border-radius: 12px;
+}
+
+.feedback-error {
+    background-color: #FEE2E2;
+    color: #DC2626;
+}
+
+.feedback-success {
+    color: var(--color-gold-main);
+    margin-top: -1rem;
+    padding: 1rem;
+}
+
+.feedback-label {
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.correction-grid {
+    display: flex;
+    flex-direction: row-reverse;
+    /* Arabic R to L */
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+.correction-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+}
+
+.correction-char {
+    font-family: var(--font-arabic);
+    font-size: 2.5rem;
+    line-height: 1;
+}
+
+.correction-translit {
+    font-family: var(--font-ui);
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.translation-section {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(220, 38, 38, 0.2);
+}
+
+.translation-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: block;
+    margin-bottom: 0.25rem;
+    opacity: 0.8;
+}
+
+.translation-text {
+    font-family: var(--font-ui);
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+.translation-meaning {
+    font-family: var(--font-ui);
+    font-size: 1.2rem;
+    font-style: italic;
+    color: #B91C1C;
+}
+
+.feedback-success .translation-meaning {
+    color: var(--color-sand-500);
+}
+
+/* Slots Area */
+.slots-container {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 3rem;
+    flex-direction: row-reverse;
+    /* Arabic order */
+    flex-wrap: wrap;
+    /* Allow wrapping on small screens */
+}
+
+.slot-item {
+    cursor: pointer;
+}
+
+.slot-item.locked {
+    cursor: default;
+}
+
+/* Tile Dock */
+.tile-dock {
+    min-height: 80px;
+    padding: 1rem;
+    background-color: var(--color-sand-100);
+    border-radius: 16px;
+
+    display: grid;
+    /* Default behavior (failsafe) */
+    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+
+    justify-content: center;
+    justify-items: center;
+    gap: 1rem;
+
+    opacity: 1;
+    max-width: 100%;
+    /* Increased to allow wider grids */
+    margin: 0 auto;
+    transition: opacity 0.2s;
+}
+
+/* Specific Grid Layouts based on Count */
+
+/* 4 Items: 4 cols desktop -> 2 cols < 600px */
+.tile-dock[data-count="4"] {
+    grid-template-columns: repeat(4, auto);
+}
+
+@media (max-width: 600px) {
+    .tile-dock[data-count="4"] {
+        grid-template-columns: repeat(2, auto);
+    }
+}
+
+/* 6 Items: 6 cols desktop -> 3 cols < 768px -> 2 cols < 480px */
+.tile-dock[data-count="6"],
+.tile-dock[data-count="12"] {
+    /* 12 uses similar logic (6x2 or 4x3 or 3x4) but let's stick to simple first */
+    grid-template-columns: repeat(6, auto);
+}
+
+@media (max-width: 768px) {
+    .tile-dock[data-count="6"] {
+        grid-template-columns: repeat(3, auto);
+    }
+}
+
+@media (max-width: 400px) {
+    .tile-dock[data-count="6"] {
+        grid-template-columns: repeat(3, auto);
+    }
+}
+
+/* 8 Items: 8 cols desktop -> 4 cols < 800px -> 2 cols < 500px */
+.tile-dock[data-count="8"] {
+    grid-template-columns: repeat(8, auto);
+}
+
+@media (max-width: 800px) {
+    .tile-dock[data-count="8"] {
+        grid-template-columns: repeat(4, auto);
+    }
+}
+
+@media (max-width: 500px) {
+    .tile-dock[data-count="8"] {
+        grid-template-columns: repeat(4, auto);
+    }
+}
+
+/* 10 Items: 5 cols desktop -> 2 cols mobile (5x2 is good) */
+.tile-dock[data-count="10"] {
+    grid-template-columns: repeat(5, auto);
+}
+
+@media (max-width: 600px) {
+    .tile-dock[data-count="10"] {
+        grid-template-columns: repeat(4, auto);
+    }
+}
+
+/* General fallback for even spacing if not matched specifically */
+.tile-dock[data-count="12"] {
+    grid-template-columns: repeat(6, auto);
+}
+
+.tile-dock[data-count="14"] {
+    grid-template-columns: repeat(7, auto);
+}
+
+.tile-dock[data-count="16"] {
+    grid-template-columns: repeat(8, auto);
+}
+
+.tile-dock.locked {
+    pointer-events: none;
+}
+
+.dock-empty-msg {
+    color: var(--color-sand-500);
+    align-self: center;
+}

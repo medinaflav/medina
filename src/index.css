@@ -1,4 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&family=Scheherazade+New:wght@400;700&display=swap');
+@import './styles/components.css';
+@import './styles/AuthForms.css';
 
 :root {
   /* Restored Palette based on Screenshots */
@@ -67,12 +69,19 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+html,
+body {
+  overflow-x: hidden;
+  width: 100%;
+  position: relative;
+}
+
 body {
   font-family: var(--font-ui);
   background-color: var(--bg-app);
   color: var(--color-brown-text);
   min-height: 100vh;
-  overflow-x: hidden;
+  /* overflow-x is handled in html, body rule above */
 }
 
 h1,
@@ -245,13 +254,6 @@ h6 {
     justify-content: center;
     display: flex;
     align-items: center;
-  }
-
-  /* Ensure container padding is comfortable but maximizes space */
-  .game-area,
-  .practice-layout {
-    padding-left: 1rem;
-    padding-right: 1rem;
   }
 
   /* Reduce gap in grid to fit more */

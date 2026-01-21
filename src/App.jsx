@@ -7,6 +7,8 @@ import GameArea from './components/GameArea';
 import Layout from './components/Layout';
 import StatsDashboard from './components/StatsDashboard';
 import LetterPractice from './components/LetterPractice';
+import PracticeMenu from './components/PracticeMenu';
+import MyAccount from './components/MyAccount';
 import { generateSessionWords } from './utils/wordGenerator';
 
 export default function App() {
@@ -14,17 +16,19 @@ export default function App() {
     const [activeTab, setActiveTab] = useState('library');
     const [selectedLetters, setSelectedLetters] = useState([]);
     const [practiceWords, setPracticeWords] = useState([]);
+    const [userStats, setUserStats] = useState([]); // Global stats
 
     // New state for Practice Sub-view ('menu', 'letters', 'words')
     const [practiceView, setPracticeView] = useState('menu');
 
-    // Fetch user settings when user logs in
+    // Fetch user settings AND stats when user logs in
     useEffect(() => {
         if (user) {
             const token = localStorage.getItem('token');
-            fetch('/api/settings', {
-                headers: { 'Authorization': `Bearer ${token}` }
-            })
+            const headers = { 'Authorization': `Bearer ${token}` };
+
+            // Fetch Settings
+            fetch('/api/settings', { headers })
                 .then(res => res.json())
                 .then(data => {
                     if (data.selectedLetters) {
@@ -32,20 +36,29 @@ export default function App() {
                     }
                 })
                 .catch(console.error);
+
+            // Fetch Stats (Lifted from StatsDashboard)
+            fetch('/api/stats', { headers })
+                .then(res => res.json())
+                .then(data => {
+                    setUserStats(data.stats || []);
+                })
+                .catch(console.error);
         }
     }, [user]);
 
     // Generate words whenever selected letters change or tab switches to practice
     useEffect(() => {
+        // Pass userStats to generator for adaptive learning
         if (selectedLetters.length > 0) {
-            const words = generateSessionWords(50, selectedLetters); // Pool of 50 words
+            const words = generateSessionWords(10, selectedLetters, userStats); // Reduced to 10 per user request
             setPracticeWords(words);
         } else {
             // Free Play: Generate random words if no letters selected
-            const words = generateSessionWords(50, []);
+            const words = generateSessionWords(10, [], userStats);
             setPracticeWords(words);
         }
-    }, [selectedLetters, activeTab]);
+    }, [selectedLetters, activeTab, userStats]); // Depend on userStats now
 
     // Reset practice view when tab changes
     useEffect(() => {
@@ -82,75 +95,19 @@ export default function App() {
                 );
             case 'practice':
                 if (practiceView === 'menu') {
-                    return (
-                        <div className="fade-in" style={{ maxWidth: '1000px', margin: '0 auto', textAlign: 'center' }}>
-                            <h2 style={{ fontSize: '2rem', color: 'var(--color-brown-text)', marginBottom: '2rem' }}>
-                                Choisir une activité
-                            </h2>
-
-                            <div style={{
-                                display: 'flex',
-                                flexWrap: 'wrap',
-                                justifyContent: 'center',
-                                gap: '2rem'
-                            }}>
-                                {/* Letter Recognition Card */}
-                                <button
-                                    onClick={() => setPracticeView('letters')}
-                                    className="card"
-                                    style={{
-                                        padding: '2rem',
-                                        cursor: 'pointer',
-                                        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem',
-                                        textAlign: 'center',
-                                        flex: '1 1 300px',
-                                        maxWidth: '450px'
-                                    }}
-                                >
-                                    <div style={{ fontSize: '4rem' }}>
-                                        🅰️
-                                    </div>
-                                    <div>
-                                        <div style={{ fontSize: '1.3rem', fontWeight: 'bold', color: 'var(--color-brown-text)', marginBottom: '0.5rem' }}>
-                                            Reconnaissance des lettres
-                                        </div>
-                                        <div style={{ color: '#6b7280', fontSize: '0.95rem' }}>
-                                            Maîtrisez les formes isolées, initiales, médianes et finales.
-                                        </div>
-                                    </div>
-                                </button>
-
-                                {/* Word Puzzle Card */}
-                                <button
-                                    onClick={() => setPracticeView('words')}
-                                    className="card"
-                                    style={{
-                                        padding: '2rem',
-                                        cursor: 'pointer',
-                                        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem',
-                                        textAlign: 'center',
-                                        flex: '1 1 300px',
-                                        maxWidth: '450px'
-                                    }}
-                                >
-                                    <div style={{ fontSize: '4rem' }}>
-                                        📖
-                                    </div>
-                                    <div>
-                                        <div style={{ fontSize: '1.3rem', fontWeight: 'bold', color: 'var(--color-brown-text)', marginBottom: '0.5rem' }}>
-                                            Lecture
-                                        </div>
-                                        <div style={{ color: '#6b7280', fontSize: '0.95rem' }}>
-                                            Lire et construire des mots.
-                                        </div>
-                                    </div>
-                                </button>
-                            </div>
-                        </div>
-                    );
+                    return <PracticeMenu onSelectActivity={setPracticeView} />;
                 }
+
                 if (practiceView === 'letters') {
-                    return <LetterPractice selectedLetters={selectedLetters} onExit={() => setPracticeView('menu')} />;
+                    return <LetterPractice
+                        selectedLetters={selectedLetters}
+                        stats={userStats}
+                        onExit={() => {
+                            setPracticeView('menu');
+                            // Refresh stats on exit to ensure next session is up to date?
+                            // For simplicity, relying on next mount or manual refresh.
+                        }}
+                    />;
                 }
                 if (practiceView === 'words') {
                     return <GameArea words={practiceWords} onExit={() => setPracticeView('menu')} />;
@@ -158,7 +115,9 @@ export default function App() {
                 return null;
 
             case 'progress':
-                return <StatsDashboard selectedLetters={selectedLetters} />;
+                return <StatsDashboard selectedLetters={selectedLetters} statsData={userStats} />;
+            case 'my-account':
+                return <MyAccount userStats={userStats} />;
             default:
                 return (
                     <LetterSelector
@@ -188,3 +147,4 @@ export default function App() {
         </Layout>
     );
 }
+

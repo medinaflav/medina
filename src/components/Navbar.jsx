@@ -20,7 +20,8 @@ export default function Navbar({ currentView, onNavigate }) {
     const navItems = [
         { id: 'library', label: 'Bibliothèque', icon: '📚' },
         { id: 'practice', label: 'Entraînement', icon: '🎮' },
-        { id: 'progress', label: 'Progression', icon: '📊' }
+        { id: 'progress', label: 'Progression', icon: '📊' },
+        { id: 'my-account', label: 'Mon compte', icon: '👤' }
     ];
 
     const toggleMenu = () => setIsOpen(!isOpen);
@@ -98,9 +99,12 @@ export default function Navbar({ currentView, onNavigate }) {
                     ))}
 
                     {/* Dark Mode Toggle Switch */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                        <span style={{ fontSize: '1.2rem', color: 'var(--color-brown-text)', fontWeight: '500' }}>
+                    {/* <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                        {/* <span style={{ fontSize: '1.2rem', color: 'var(--color-brown-text)', fontWeight: '500' }}>
                             {theme === 'light' ? 'Mode Jour' : 'Mode Nuit'}
+                        </span> 
+                        <span style={{ fontSize: '1.2rem', color: 'var(--color-brown-text)', fontWeight: '500' }}>
+                            ☀️
                         </span>
                         <label style={{ position: 'relative', display: 'inline-block', width: '52px', height: '28px', cursor: 'pointer' }}>
                             <input
@@ -130,6 +134,9 @@ export default function Navbar({ currentView, onNavigate }) {
                                 boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
                             }}></span>
                         </label>
+                        <span style={{ fontSize: '1.2rem', color: 'var(--color-brown-text)', fontWeight: '500' }}>
+                            🌙
+                        </span>
                     </div>
 
                     <div style={{ width: '50px', height: '1px', background: 'var(--color-sand-200)', margin: '1rem 0' }} />
@@ -152,7 +159,7 @@ export default function Navbar({ currentView, onNavigate }) {
                         }}
                     >
                         Déconnexion
-                    </button>
+                    </button> */}
                 </div>
             )}
         </>
