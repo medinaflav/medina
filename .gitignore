@@ -23,3 +23,5 @@ dist-ssr
 *.sln
 *.sw?
 kaikki.org-dictionary-Arabic-words.jsonl
+.env
+.env.*
