@@ -284,8 +284,6 @@ app.get('/api/stats', authenticateToken, async (req, res) => {
         res.status(500).json({ error: e.message });
     }
 });
-    }
-});
 
 // Serve Static Files (Frontend) in Production
 import path from 'path';
