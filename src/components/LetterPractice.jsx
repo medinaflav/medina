@@ -10,7 +10,7 @@ import StimulusDisplay from './LetterPractice/StimulusDisplay';
 
 import { getWeightedItem } from '../utils/adaptiveLearning';
 
-export default function LetterPractice({ selectedLetters, onExit, stats }) {
+export default function LetterPractice({ selectedLetters, onExit, stats, onViewProgress }) {
     // Mode Selection: null (setup), 'isolated', 'all'
     const [practiceMode, setPracticeMode] = useState(null);
 
@@ -31,7 +31,7 @@ export default function LetterPractice({ selectedLetters, onExit, stats }) {
     const [feedback, setFeedback] = useState(null); // 'correct', 'incorrect'
     const [score, setScore] = useState(0);
 
-    const SESSION_LENGTH = 10;
+    const SESSION_LENGTH = 1;
 
     const startSession = (mode) => {
         setPracticeMode(mode);
@@ -156,6 +156,7 @@ export default function LetterPractice({ selectedLetters, onExit, stats }) {
                 total={SESSION_LENGTH}
                 onRetry={() => startSession(practiceMode)}
                 onExit={() => setPracticeMode(null)}
+                onViewProgress={onViewProgress}
             />
         );
     }

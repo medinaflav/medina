@@ -2,9 +2,10 @@ import React, { useState, useEffect, useCallback } from 'react';
 import WordPuzzle from './WordPuzzle';
 import useAudioPlayer from '../hooks/useAudioPlayer';
 import QuitConfirmationModal from './common/QuitConfirmationModal';
+import SessionComplete from './common/SessionComplete';
 import './GameArea.css';
 
-export default function GameArea({ words, onExit }) {
+export default function GameArea({ words, onExit, onViewProgress }) {
     // Session State
     const [sessionWords, setSessionWords] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -86,29 +87,20 @@ export default function GameArea({ words, onExit }) {
 
     // Session Summary View
     if (!sessionActive) {
-        return (
-            <div className="session-summary fade-in">
-                <h2 className="summary-title">
-                    {sessionWords.length > 0 ? "Session Terminée !" : "Prêt à s'entraîner ?"}
-                </h2>
-
-                {sessionWords.length > 0 && (
-                    <div className="summary-stats">
-                        <div className="stat-row">
-                            <span className="stat-label">Score</span>
-                            <span className="stat-value">{sessionStats.correct} / {sessionStats.total}</span>
-                        </div>
-                        <p style={{ marginTop: '1rem', color: 'var(--color-sand-500)', fontSize: '0.9rem' }}>
-                            Vérifiez l'onglet Progression pour les détails.
-                        </p>
-                    </div>
-                )}
-
-                <button onClick={startSession} className="btn-primary">
-                    {sessionWords.length > 0 ? "Nouvelle Session" : "Commencer"}
-                </button>
-            </div>
-        );
+        // If we have words but session is not active, it means we finished.
+        if (sessionWords.length > 0) {
+            return (
+                <SessionComplete
+                    score={sessionStats.correct}
+                    total={sessionStats.total}
+                    onRetry={startSession}
+                    onExit={() => { onExit && onExit(); }}
+                    onViewProgress={onViewProgress}
+                />
+            );
+        }
+        // Fallback or loading state if needed, though auto-start should handle it
+        return null;
     }
 
     return (

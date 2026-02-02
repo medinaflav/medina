@@ -23,7 +23,7 @@
 
 @media (max-width: 480px) {
     .puzzle-main-word {
-        font-size: 2.5rem;
+        font-size: 3.5rem;
         /* Even smaller for mobile */
     }
 }

@@ -135,5 +135,22 @@
     align-items: center;
     gap: 0.5rem;
     padding: 1rem 2rem;
+    padding: 1rem 2rem;
     font-size: 1.1rem;
+}
+
+/* Modal Form Cards */
+.letter-form-card {
+    background-color: var(--color-sand-50);
+    border: 1px solid var(--color-sand-200);
+    transition: all 0.3s ease;
+}
+
+[data-theme='dark'] .letter-form-card {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme='dark'] .letter-form-card .text-secondary {
+    color: var(--color-sand-200);
 }

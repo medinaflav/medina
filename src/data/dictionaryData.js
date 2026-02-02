@@ -12,7 +12,7 @@ export const DICTIONARY_DATA = [
     },
     {
         "text": "حماس",
-        "translation": "Excitation; enthousiasme; zèle",
+        "translation": "Enthousiasme, zèle",
         "vocalizedText": "حَمَاس",
         "letters": [
             "ha",
@@ -729,7 +729,7 @@ export const DICTIONARY_DATA = [
     },
     {
         "text": "كوبري",
-        "translation": "Overpass, flyover",
+        "translation": "Pont supérieur",
         "vocalizedText": "كُوبْرِي",
         "letters": [
             "kaf",
@@ -742,7 +742,7 @@ export const DICTIONARY_DATA = [
     },
     {
         "text": "أرض",
-        "translation": "Earth, land",
+        "translation": "Terre, sol",
         "vocalizedText": "أَرْض",
         "letters": [
             "alif",
@@ -764,7 +764,7 @@ export const DICTIONARY_DATA = [
     },
     {
         "text": "ليل",
-        "translation": "Nighttime, night",
+        "translation": "Nuit",
         "vocalizedText": "لَيْل",
         "letters": [
             "lam",
@@ -3402,7 +3402,7 @@ export const DICTIONARY_DATA = [
     {
         "text": "آن",
         "translation": "temps",
-        "vocalizedText": "ʔān",
+        "vocalizedText": "’ān",
         "letters": [
             "alif",
             "nun"

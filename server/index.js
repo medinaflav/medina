@@ -20,13 +20,20 @@ const initEmail = async () => {
         transporter = nodemailer.createTransport({
             host: process.env.SMTP_HOST,
             port: process.env.SMTP_PORT || 587,
-            secure: false, // true for 465, false for other ports
+            secure: false,
             auth: {
                 user: process.env.SMTP_USER,
                 pass: process.env.SMTP_PASS,
             },
         });
-        console.log("Email Service Ready (Real SMTP)");
+
+        // Verify connection configuration
+        try {
+            await transporter.verify();
+            console.log("✅ Email Service Ready (Real SMTP Connected)");
+        } catch (error) {
+            console.error("❌ Email Service Error:", error);
+        }
     } else {
         // Fallback to Ethereal for dev if no env vars
         try {

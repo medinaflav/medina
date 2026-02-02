@@ -1,13 +1,16 @@
-/**
- * Utility to handle Arabic letter forms visual representation
- * Uses Zero Width Joiner (ZWJ) to force shaping
- */
+import { ARABIC_FORM_MAP } from './arabicFormMap';
 
 const ZWJ = '\u200D';
 
 export const getVisualForm = (char, form) => {
     if (!char) return '';
 
+    // 1. Try explicit map
+    if (ARABIC_FORM_MAP[char] && ARABIC_FORM_MAP[char][form]) {
+        return ARABIC_FORM_MAP[char][form];
+    }
+
+    // 2. Fallback to ZWJ method
     switch (form) {
         case 'initial':
             return char + ZWJ;
@@ -21,6 +24,4 @@ export const getVisualForm = (char, form) => {
     }
 };
 
-// Alias for getLetterForm if it was intended to be the same, 
-// or simpler version. In previous usage traces it appears unused or interchangeable.
 export const getLetterForm = getVisualForm;

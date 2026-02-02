@@ -1,0 +1,111 @@
+.sun-moon-game {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  min-height: 60vh;
+  justify-content: center;
+}
+
+.letter-display {
+  font-size: 8rem;
+  font-family: 'Amiri', serif;
+  margin-bottom: 2rem;
+  transition: transform 0.3s ease;
+  cursor: default;
+}
+
+.letter-display:hover {
+  transform: scale(1.1);
+}
+
+.choices-container {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.choice-btn {
+  background: white;
+  border: 2px solid var(--color-sand-300);
+  border-radius: 12px;
+  padding: 2rem;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.choice-btn:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border-color: var(--color-gold-500);
+}
+
+.choice-btn.sun {
+  color: #d97706;
+}
+
+.choice-btn.moon {
+  color: #4b5563;
+}
+
+.choice-btn .icon {
+  font-size: 3rem;
+}
+
+.feedback-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.9);
+  z-index: 100;
+  font-size: 4rem;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.score-display {
+  font-size: 1.2rem;
+  color: var(--color-brown-text);
+  margin-bottom: 1rem;
+}
+
+/* Dark mode overrides */
+@media (prefers-color-scheme: dark) {
+  .sun-moon-game {
+      color: var(--color-sand-100);
+  }
+  
+  .choice-btn {
+      background: var(--color-brown-dark);
+      border-color: var(--color-brown-light);
+      color: var(--color-sand-100);
+  }
+
+  .choice-btn:hover {
+      border-color: var(--color-gold-500);
+      background: var(--color-brown-light);
+  }
+
+  .feedback-overlay {
+      background: rgba(0, 0, 0, 0.85);
+  }
+}

@@ -26,7 +26,7 @@ export default function LetterPreviewModal({ letter, onClose }) {
                 <h2 style={{ fontFamily: 'var(--font-arabic)', fontSize: '4rem', color: 'var(--color-brown-text)', margin: 0, lineHeight: 1 }}>
                     {letter.char}
                 </h2>
-                <h3 style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', marginBottom: '2rem' }}>
+                <h3 style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', marginBottom: '2rem', marginTop: '1rem' }}>
                     {letter.name}
                 </h3>
 
@@ -42,16 +42,14 @@ export default function LetterPreviewModal({ letter, onClose }) {
                         { id: 'medial', label: 'Milieu' },
                         { id: 'final', label: 'Fin' }
                     ].map(({ id, label }) => (
-                        <div key={id} style={{
+                        <div key={id} className="letter-form-card" style={{
                             padding: '1rem 0.5rem',
-                            backgroundColor: 'var(--color-sand-50)',
                             borderRadius: '12px',
-                            border: '1px solid var(--color-sand-200)'
                         }}>
                             <div style={{
                                 fontFamily: 'var(--font-arabic)',
                                 fontSize: '2.5rem',
-                                color: 'var(--color-gold-600)',
+                                color: 'var(--color-brown-text)', // Changed from fixed gold to adapt
                                 height: '60px',
                                 display: 'flex',
                                 alignItems: 'center',

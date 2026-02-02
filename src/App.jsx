@@ -9,6 +9,7 @@ import StatsDashboard from './components/StatsDashboard';
 import LetterPractice from './components/LetterPractice';
 import PracticeMenu from './components/PracticeMenu';
 import MyAccount from './components/MyAccount';
+import SunMoonGame from './components/SunMoonGame';
 import { generateSessionWords } from './utils/wordGenerator';
 
 export default function App() {
@@ -104,13 +105,23 @@ export default function App() {
                         stats={userStats}
                         onExit={() => {
                             setPracticeView('menu');
-                            // Refresh stats on exit to ensure next session is up to date?
-                            // For simplicity, relying on next mount or manual refresh.
                         }}
+                        onViewProgress={() => setActiveTab('progress')}
                     />;
                 }
                 if (practiceView === 'words') {
-                    return <GameArea words={practiceWords} onExit={() => setPracticeView('menu')} />;
+                    return <GameArea
+                        words={practiceWords}
+                        onExit={() => setPracticeView('menu')}
+                        onViewProgress={() => setActiveTab('progress')}
+                    />;
+                }
+                if (practiceView === 'sun-moon') {
+                    return <SunMoonGame
+                        selectedLetters={selectedLetters}
+                        onExit={() => setPracticeView('menu')}
+                        onViewProgress={() => setActiveTab('progress')}
+                    />;
                 }
                 return null;
 
