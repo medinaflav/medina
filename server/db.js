@@ -29,7 +29,7 @@ export async function getDb() {
     // Robust migration - Try each column individually
     try { await db.exec('ALTER TABLE users ADD COLUMN email TEXT UNIQUE'); } catch (e) { }
     try { await db.exec('ALTER TABLE users ADD COLUMN google_id TEXT UNIQUE'); } catch (e) { }
-    try { await db.exec('ALTER TABLE users ADD COLUMN is_verified BOOLEAN DEFAULT 1'); } catch (e) { }
+    try { await db.exec('ALTER TABLE users ADD COLUMN is_verified BOOLEAN DEFAULT 0'); } catch (e) { }
     try { await db.exec('ALTER TABLE users ADD COLUMN verification_token TEXT'); } catch (e) { }
     try { await db.exec('ALTER TABLE users ADD COLUMN token_expires DATETIME'); } catch (e) { }
 
