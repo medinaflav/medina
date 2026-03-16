@@ -15,6 +15,7 @@ const client = new OAuth2Client(CLIENT_ID);
 
 // Email Transporter (Dev: Ethereal)
 let transporter;
+let emailDevMode = false;
 const initEmail = async () => {
     if (process.env.SMTP_HOST) {
         transporter = nodemailer.createTransport({
@@ -47,6 +48,8 @@ const initEmail = async () => {
                     pass: testAccount.pass,
                 },
             });
+            emailDevMode = true;
+            console.warn("⚠️  SMTP non configuré — emails de vérification non envoyés (mode dev Ethereal)");
             console.log("Email Service Ready (Ethereal - Dev Mode)");
         } catch (e) {
             console.error("Failed to init Ethereal:", e);
@@ -122,7 +125,12 @@ app.post('/api/auth/register', async (req, res) => {
 
         console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
 
-        res.json({ success: true, email, message: 'Code envoyé' });
+        const registerResponse = { success: true, email, message: 'Code envoyé' };
+        if (emailDevMode) {
+            registerResponse.emailSent = false;
+            registerResponse.devMode = true;
+        }
+        res.json(registerResponse);
     } catch (e) {
         if (e.message.includes('UNIQUE constraint failed')) {
             if (e.message.includes('email')) res.status(409).json({ error: 'Cet email existe déjà' });
