@@ -68,8 +68,9 @@ export default function StatsDashboard({ selectedLetters = [], statsData }) {
             <h3 className="stats-subtitle">Statistiques détaillées</h3>
 
             {/* Detailed Grid */}
+            {/* If no letters are selected, fall back to all letters that have stats data */}
             <div className="letters-grid">
-                {selectedLetters.map((letterId) => {
+                {(selectedLetters.length > 0 ? selectedLetters : Object.keys(groupedStats)).map((letterId) => {
                     const forms = groupedStats[letterId] || [];
                     const letter = getLetter(letterId) || { name: letterId, char: '?' };
 
