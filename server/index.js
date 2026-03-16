@@ -55,7 +55,22 @@ const initEmail = async () => {
 };
 initEmail();
 
-app.use(cors());
+const ALLOWED_ORIGINS = [
+    'http://localhost:5173',
+    'http://localhost:5174',
+    'http://192.168.1.101:5173',
+];
+app.use(cors({
+    origin: (origin, callback) => {
+        // Allow requests with no origin (e.g. curl, mobile apps)
+        if (!origin || ALLOWED_ORIGINS.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error(`CORS: origin ${origin} not allowed`));
+        }
+    },
+    credentials: true,
+}));
 app.use(express.json());
 
 // Auth Middleware
