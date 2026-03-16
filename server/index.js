@@ -140,7 +140,11 @@ app.post('/api/auth/verify', async (req, res) => {
         const user = await db.get('SELECT * FROM users WHERE email = ?', [email]);
 
         if (!user) return res.status(400).json({ error: 'Utilisateur introuvable' });
-        if (user.is_verified) return res.status(200).json({ success: true }); // Already verified
+        if (user.is_verified) {
+            // Already verified — return a valid token so the frontend can log the user in
+            const token = jwt.sign({ id: user.id, username: user.username }, SECRET_KEY, { expiresIn: '7d' });
+            return res.status(200).json({ token, user: { id: user.id, username: user.username, email: user.email } });
+        }
 
         if (user.verification_token !== code) return res.status(400).json({ error: 'Code invalide' });
         if (new Date(user.token_expires) < new Date()) return res.status(400).json({ error: 'Code expiré' });
