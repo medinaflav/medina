@@ -31,7 +31,7 @@ export default function LetterPractice({ selectedLetters, onExit, stats, onViewP
     const [feedback, setFeedback] = useState(null); // 'correct', 'incorrect'
     const [score, setScore] = useState(0);
 
-    const SESSION_LENGTH = 1;
+    const SESSION_LENGTH = 10;
 
     const startSession = (mode) => {
         setPracticeMode(mode);
@@ -170,7 +170,7 @@ export default function LetterPractice({ selectedLetters, onExit, stats, onViewP
             <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginBottom: '1rem' }}>
                 <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
                     <div style={{ fontSize: '1.1rem', color: 'var(--text-secondary)' }}>
-                        Question {questionCount + 1} / 10
+                        Question {questionCount + 1} / {SESSION_LENGTH}
                     </div>
                     <div style={{ fontSize: '1.2rem', color: 'var(--color-gold-600)', fontWeight: 'bold' }}>
                         Score: {score}
