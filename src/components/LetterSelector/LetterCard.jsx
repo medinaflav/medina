@@ -9,18 +9,18 @@ export default function LetterCard({ letter, isSelected, isSolar, showSunMoonTyp
             style={{
                 cursor: 'pointer',
                 textAlign: 'center',
-                border: isSelected ? '2px solid var(--color-gold-main)' : '2px solid transparent',
-                backgroundColor: 'var(--bg-card)',
-                transform: isSelected ? 'scale(1.02)' : 'scale(1)',
-                transition: 'all 0.2s ease',
+                border: isSelected ? 'var(--selected-border-w) solid var(--selected-border)' : '2px solid transparent',
+                backgroundColor: isSelected ? 'var(--selected-bg)' : 'var(--bg-card)',
+                transform: isSelected ? 'translateY(-3px) scale(1.03)' : 'translateY(0) scale(1)',
+                transition: 'transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.22s ease, background-color 0.18s ease, border-color 0.18s ease',
                 position: 'relative',
                 borderRadius: '24px',
-                height: '160px', /* Increased height slightly for spacing */
+                height: '160px',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                boxShadow: isSelected ? '0 4px 15px rgba(217, 119, 6, 0.15)' : '0 2px 5px rgba(0,0,0,0.05)',
+                boxShadow: isSelected ? 'var(--selected-glow)' : '0 2px 5px rgba(0,0,0,0.05)',
             }}
         >
             {/* Type Icon (Sun/Moon) */}
@@ -50,8 +50,8 @@ export default function LetterCard({ letter, isSelected, isSolar, showSunMoonTyp
 
             <div style={{
                 fontFamily: 'var(--font-arabic)',
-                fontSize: '3.5rem',
-                color: 'var(--color-brown-text)',
+                color: isSelected ? 'var(--selected-arabic)' : 'var(--color-brown-text)',
+                fontSize: isSelected ? '4rem' : '3.5rem',
                 marginTop: '-1.5rem',
                 lineHeight: 2
             }}>
@@ -59,11 +59,32 @@ export default function LetterCard({ letter, isSelected, isSolar, showSunMoonTyp
             </div>
             <div style={{
                 fontSize: '1rem',
-                color: isSelected ? 'var(--color-gold-main)' : 'var(--text-secondary)', /* Conditional color */
-                fontWeight: '500'
+                color: isSelected ? 'var(--selected-name)' : 'var(--ink-secondary)',
+                fontWeight: isSelected ? '700' : '500'
             }}>
                 {letter.name}
             </div>
+            {isSelected && (
+                <div style={{
+                    position: 'absolute',
+                    bottom: '10px',
+                    right: '12px',
+                    width: '20px',
+                    height: '20px',
+                    borderRadius: '50%',
+                    backgroundColor: 'var(--selected-border)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '11px',
+                    color: 'white',
+                    fontWeight: '700',
+                    lineHeight: 1,
+                    flexShrink: 0,
+                }}>
+                    ✓
+                </div>
+            )}
         </div>
     );
 }
