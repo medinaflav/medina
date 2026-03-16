@@ -41,7 +41,7 @@ export default function LetterSelector({ selectedLetters, onSelectionChange }) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token} `
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({ selectedLetters })
         })
@@ -93,7 +93,7 @@ export default function LetterSelector({ selectedLetters, onSelectionChange }) {
                     {/* Toggle Switch */}
                     <div className="toggle-group">
                         <span className="toggle-label">
-                            {showSunMoon ? 'Lunaires/Solaires' : 'Lunaires/Solaires'}
+                            {showSunMoon ? 'Type Solaire/Lunaire' : 'Voir type Solaire/Lunaire'}
                         </span>
                         <label className="toggle-switch"> {/* Using shared toggle style from GameArea if available, or redefining in CSS */}
                             <input
