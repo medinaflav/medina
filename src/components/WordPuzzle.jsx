@@ -81,7 +81,19 @@ export default function WordPuzzle({ word, onStateChange, showFeedback, showVowe
             if (draggedTile) {
                 const expectedLetterId = word.letters[slotIndex];
                 const isCorrect = draggedTile.letterId === expectedLetterId;
-                recordAttempt(expectedLetterId, slotIndex, isCorrect);
+                // Determine the arabic form based on position in word
+                const wordLength = word.letters.length;
+                let arabicForm;
+                if (wordLength === 1) {
+                    arabicForm = 'isolated';
+                } else if (slotIndex === 0) {
+                    arabicForm = 'initial';
+                } else if (slotIndex === wordLength - 1) {
+                    arabicForm = 'final';
+                } else {
+                    arabicForm = 'medial';
+                }
+                recordAttempt(expectedLetterId, arabicForm, isCorrect);
             }
 
             setPlacedLetters(prev => {
