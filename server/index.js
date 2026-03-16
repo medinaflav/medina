@@ -8,8 +8,8 @@ import nodemailer from 'nodemailer';
 import 'dotenv/config';
 
 const app = express();
-const PORT = 3000;
-const SECRET_KEY = 'medina-secret-key-change-this-later'; // Simplify for now
+const PORT = process.env.PORT || 3003;
+const SECRET_KEY = process.env.JWT_SECRET || 'medina-dev-fallback-change-in-production';
 const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const client = new OAuth2Client(CLIENT_ID);
 
@@ -132,7 +132,7 @@ app.post('/api/auth/verify', async (req, res) => {
 
         await db.run('UPDATE users SET is_verified = 1, verification_token = NULL WHERE id = ?', [user.id]);
 
-        const token = jwt.sign({ id: user.id, username: user.username }, SECRET_KEY);
+        const token = jwt.sign({ id: user.id, username: user.username }, SECRET_KEY, { expiresIn: '7d' });
         res.json({ token, user: { id: user.id, username: user.username, email: user.email } });
     } catch (e) {
         res.status(500).json({ error: e.message });
@@ -155,7 +155,7 @@ app.post('/api/auth/login', async (req, res) => {
             return res.status(403).json({ error: 'Compte non vérifié', email: user.email });
         }
 
-        const token = jwt.sign({ id: user.id, username: user.username }, SECRET_KEY);
+        const token = jwt.sign({ id: user.id, username: user.username }, SECRET_KEY, { expiresIn: '7d' });
         res.json({ token, user: { id: user.id, username: user.username, email: user.email } });
     } catch (e) {
         res.status(500).json({ error: e.message });
@@ -196,7 +196,7 @@ app.post('/api/auth/google', async (req, res) => {
             }
         }
 
-        const jwtToken = jwt.sign({ id: user.id, username: user.username }, SECRET_KEY);
+        const jwtToken = jwt.sign({ id: user.id, username: user.username }, SECRET_KEY, { expiresIn: '7d' });
         res.json({ token: jwtToken, user: { id: user.id, username: user.username, email: user.email } });
 
     } catch (e) {
