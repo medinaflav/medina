@@ -18,9 +18,6 @@ export default function MyAccount({ userStats }) {
         localStorage.setItem('theme', newTheme);
     };
 
-    console.log(user);
-
-
     return (
         <div className="my-account-container">
             <div className="my-account-card">
