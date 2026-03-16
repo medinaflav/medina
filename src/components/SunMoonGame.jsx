@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ALPHABET, getLetter } from '../data/alphabet';
 import { playSuccessSound, playErrorSound } from '../utils/audio';
+import { recordAttempt } from '../utils/statsManager';
 import QuitConfirmationModal from './common/QuitConfirmationModal';
 import SessionComplete from './common/SessionComplete';
 import './SunMoonGame.css';
@@ -53,6 +54,9 @@ export default function SunMoonGame({ selectedLetters, onExit, onViewProgress })
 
         const isCorrect = target.type === choice;
 
+        // Persist stats — letters in this game are shown in isolated form
+        recordAttempt(target.id, 'isolated', isCorrect);
+
         if (isCorrect) {
             setFeedback('correct');
             setScore(s => s + 1);
@@ -61,8 +65,8 @@ export default function SunMoonGame({ selectedLetters, onExit, onViewProgress })
         } else {
             setFeedback('incorrect');
             playErrorSound();
-            // Optional: Show error feedback before moving on? 
-            // valid behavior: Shake animation or red highlight. 
+            // Optional: Show error feedback before moving on?
+            // valid behavior: Shake animation or red highlight.
             // For now, let's just show feedback state.
         }
 
