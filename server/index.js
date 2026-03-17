@@ -76,12 +76,17 @@ app.use(cors({
 }));
 app.use(express.json());
 
+// In-memory token blacklist (reset on server restart — acceptable for now)
+const tokenBlacklist = new Set();
+
 // Auth Middleware
 const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
 
     if (!token) return res.sendStatus(401);
+
+    if (tokenBlacklist.has(token)) return res.sendStatus(401);
 
     jwt.verify(token, SECRET_KEY, (err, user) => {
         if (err) return res.sendStatus(403);
@@ -187,6 +192,13 @@ app.post('/api/auth/login', async (req, res) => {
     } catch (e) {
         res.status(500).json({ error: e.message });
     }
+});
+
+app.post('/api/auth/logout', authenticateToken, (req, res) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    tokenBlacklist.add(token);
+    res.json({ success: true });
 });
 
 app.post('/api/auth/google', async (req, res) => {
