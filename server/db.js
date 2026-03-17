@@ -33,16 +33,10 @@ export async function getDb() {
     try { await db.exec('ALTER TABLE users ADD COLUMN verification_token TEXT'); } catch (e) { }
     try { await db.exec('ALTER TABLE users ADD COLUMN token_expires DATETIME'); } catch (e) { }
 
-    await db.exec(`
+    // Drop legacy progress table that was never used in production
+    try { await db.exec('DROP TABLE IF EXISTS progress'); } catch (e) { }
 
-      CREATE TABLE IF NOT EXISTS progress (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER,
-        word_id TEXT,
-        is_correct BOOLEAN,
-        attempted_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY(user_id) REFERENCES users(id)
-      );
+    await db.exec(`
 
       CREATE TABLE IF NOT EXISTS user_settings (
         user_id INTEGER PRIMARY KEY,
