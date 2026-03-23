@@ -29,3 +29,8 @@ database.sqlite
 ui-previews/
 *.png
 "Capture*"
+# iOS
+ios/App/Pods/
+ios/App/App.xcworkspace/
+*.xcuserstate
+DerivedData/

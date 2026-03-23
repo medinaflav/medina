@@ -1,0 +1,29 @@
+{
+  "appId": "org.medinalearn.app",
+  "appName": "Medina",
+  "webDir": "dist",
+  "server": {
+    "allowNavigation": [
+      "https://medinalearn.duckdns.org",
+      "https://accounts.google.com"
+    ]
+  },
+  "ios": {
+    "scheme": "Medina",
+    "backgroundColor": "#F0FDF9",
+    "contentInset": "always",
+    "scrollEnabled": false,
+    "limitsNavigationsToAppBoundDomains": true
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 1500,
+      "backgroundColor": "#F0FDF9",
+      "showSpinner": false
+    },
+    "StatusBar": {
+      "style": "DEFAULT",
+      "backgroundColor": "#F0FDF9"
+    }
+  }
+}
