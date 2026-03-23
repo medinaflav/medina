@@ -1,9 +1,16 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import './Navbar.css';
 
+/**
+ * Bottom tab navigation bar — fixed to the bottom of the viewport.
+ * Replaces the previous hamburger/overlay menu pattern.
+ *
+ * @param {string}   currentView  - Active tab id ('library' | 'practice' | 'progress' | 'my-account')
+ * @param {Function} onNavigate   - Callback when a tab is tapped
+ */
 export default function Navbar({ currentView, onNavigate }) {
-    const [isOpen, setIsOpen] = useState(false);
-    const { logout, user } = useAuth();
+    const { logout } = useAuth();
 
     const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light');
 
@@ -12,156 +19,80 @@ export default function Navbar({ currentView, onNavigate }) {
         localStorage.setItem('theme', theme);
     }, [theme]);
 
-    const toggleTheme = () => {
-        setTheme(prev => prev === 'light' ? 'dark' : 'light');
-        // Do not close menu to allow quick toggle check
-    };
-
+    /* Nav items — SVG icons kept inline for zero extra dependency */
     const navItems = [
-        { id: 'library', label: 'Bibliothèque', icon: '📚' },
-        { id: 'practice', label: 'Entraînement', icon: '🎮' },
-        { id: 'progress', label: 'Progression', icon: '📊' },
-        { id: 'my-account', label: 'Mon compte', icon: '👤' }
+        {
+            id: 'library',
+            label: 'Bibliothèque',
+            icon: (
+                /* Book icon */
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+            ),
+        },
+        {
+            id: 'practice',
+            label: 'Entraînement',
+            icon: (
+                /* Star icon */
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+            ),
+        },
+        {
+            id: 'progress',
+            label: 'Progression',
+            icon: (
+                /* Bar chart icon */
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <line x1="18" y1="20" x2="18" y2="10" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                    <line x1="12" y1="20" x2="12" y2="4"  stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                    <line x1="6"  y1="20" x2="6"  y2="14" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                </svg>
+            ),
+        },
+        {
+            id: 'my-account',
+            label: 'Compte',
+            icon: (
+                /* Person icon */
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <circle cx="12" cy="7" r="4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+            ),
+        },
     ];
 
-    const toggleMenu = () => setIsOpen(!isOpen);
-
-    const handleNavigate = (viewId) => {
-        onNavigate(viewId);
-        setIsOpen(false);
-    };
-
-    const handleLogout = () => {
-        logout();
-        setIsOpen(false);
-    };
-
     return (
-        <>
-            {/* Burger Button */}
-            <button
-                onClick={toggleMenu}
-                style={{
-                    position: 'absolute',
-                    top: '2rem',
-                    right: '1.5rem',
-                    zIndex: 200,
-                    background: 'none',
-                    border: 'none',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '6px'
-                }}
-            >
-                <div style={{ width: '32px', height: '3px', background: 'var(--color-gold-main)', borderRadius: '2px' }} />
-                <div style={{ width: '32px', height: '3px', background: 'var(--color-gold-main)', borderRadius: '2px' }} />
-                <div style={{ width: '32px', height: '3px', background: 'var(--color-gold-main)', borderRadius: '2px' }} />
-            </button>
-
-            {/* Overlay Menu */}
-            {isOpen && (
-                <div style={{
-                    position: 'fixed',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    backgroundColor: 'var(--bg-app)', /* Use variable for theme support */
-                    zIndex: 150,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '2rem',
-                    transition: 'background-color 0.3s'
-                }}>
-                    {navItems.map(item => (
-                        <button
-                            key={item.id}
-                            onClick={() => handleNavigate(item.id)}
-                            style={{
-                                background: 'none',
-                                border: 'none',
-                                fontSize: '2rem',
-                                color: currentView === item.id ? 'var(--color-gold-main)' : 'var(--color-brown-text)',
-                                fontFamily: 'var(--font-ui)',
-                                fontWeight: 'bold',
-                                cursor: 'pointer',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '1rem'
-                            }}
-                        >
-                            <span>{item.icon}</span>
-                            {item.label}
-                        </button>
-                    ))}
-
-                    {/* Dark Mode Toggle Switch */}
-                    {/* <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                        {/* <span style={{ fontSize: '1.2rem', color: 'var(--color-brown-text)', fontWeight: '500' }}>
-                            {theme === 'light' ? 'Mode Jour' : 'Mode Nuit'}
-                        </span> 
-                        <span style={{ fontSize: '1.2rem', color: 'var(--color-brown-text)', fontWeight: '500' }}>
-                            ☀️
-                        </span>
-                        <label style={{ position: 'relative', display: 'inline-block', width: '52px', height: '28px', cursor: 'pointer' }}>
-                            <input
-                                type="checkbox"
-                                checked={theme === 'dark'}
-                                onChange={toggleTheme}
-                                style={{ opacity: 0, width: 0, height: 0 }}
-                            />
-                            <span style={{
-                                position: 'absolute',
-                                cursor: 'pointer',
-                                top: 0, left: 0, right: 0, bottom: 0,
-                                backgroundColor: theme === 'dark' ? 'var(--color-gold-main)' : '#ccc',
-                                transition: '.4s',
-                                borderRadius: '34px'
-                            }}></span>
-                            <span style={{
-                                position: 'absolute',
-                                content: '""',
-                                height: '22px',
-                                width: '22px',
-                                left: theme === 'dark' ? '26px' : '3px',
-                                bottom: '3px',
-                                backgroundColor: 'white',
-                                transition: '.4s',
-                                borderRadius: '50%',
-                                boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
-                            }}></span>
-                        </label>
-                        <span style={{ fontSize: '1.2rem', color: 'var(--color-brown-text)', fontWeight: '500' }}>
-                            🌙
-                        </span>
-                    </div>
-
-                    <div style={{ width: '50px', height: '1px', background: 'var(--color-sand-200)', margin: '1rem 0' }} />
-
-                    <div style={{
-                        color: 'var(--text-secondary)',
-                    }}>
-                        Connecté en tant que <strong>{user?.username}</strong>
-                    </div>
-
+        <nav
+            aria-label="Navigation principale"
+            className="bottom-nav"
+        >
+            {navItems.map((item) => {
+                const isActive = currentView === item.id;
+                return (
                     <button
-                        onClick={handleLogout}
-                        className="btn-danger"
-                        style={{
-                            fontSize: '1.1rem',
-                            cursor: 'pointer',
-                            width: 'auto', // Override mobile 100% width
-                            padding: '1rem 3rem',
-                            minWidth: '200px'
-                        }}
+                        key={item.id}
+                        onClick={() => onNavigate(item.id)}
+                        aria-label={item.label}
+                        aria-current={isActive ? 'page' : undefined}
                     >
-                        Déconnexion
-                    </button> */}
-                </div>
-            )}
-        </>
+                        {/* Icon pill — highlighted when active */}
+                        <span className={`nav-pill ${isActive ? 'nav-pill--active' : ''}`}>
+                            {item.icon}
+                        </span>
+
+                        {/* Label */}
+                        <span className={`nav-label ${isActive ? 'nav-label--active' : ''}`}>
+                            {item.label}
+                        </span>
+                    </button>
+                );
+            })}
+        </nav>
     );
 }

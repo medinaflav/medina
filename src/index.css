@@ -1,65 +1,135 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&family=Scheherazade+New:wght@400;700&display=swap');
+/* Fonts chargées via index.html (preconnect + link) */
 @import './styles/components.css';
 @import './styles/AuthForms.css';
 
 :root {
-  /* Restored Palette based on Screenshots */
-  --color-gold-main: #c5a028;
-  /* The Title Gold */
-  --color-gold-light: #fdf6e3;
-  /* Selected Card Background */
+  /* ── Palette Émeraude Islamique ── */
+  --bg-app:              #F0FDF9;
+  --bg-surface:          #FFFFFF;
+  --bg-tinted:           #D1FAE5;
+  --bg-deep:             #ECFDF5;
+  --bg-card:             #FFFFFF;
 
-  --color-brown-dark: #4a4036;
-  /* "Next Word" Button */
-  --color-brown-text: #2d241c;
-  /* Main Text */
+  --brand-primary:       #059669;
+  --brand-deep:          #047857;
+  --brand-accent:        #10B981;
+  --brand-light:         #ECFDF5;
+  --brand-glow:          rgba(5, 150, 105, 0.12);
+  --brand-glow-lg:       rgba(5, 150, 105, 0.20);
 
-  --color-red-danger: #ef4444;
-  /* Sign Out */
-  --color-green-success: #10b981;
-  /* Progress */
+  --selected-bg:         #D1FAE5;
+  --selected-border:     #059669;
+  --selected-border-w:   3px;
+  --selected-glow:       0 0 0 4px rgba(5, 150, 105, 0.22), 0 4px 16px rgba(5, 150, 105, 0.18);
+  --selected-arabic:     #047857;
+  --selected-name:       #059669;
 
-  /* Dark Mode Overrides */
-  --bg-app: #fcfbf9;
-  --bg-card: #ffffff;
-  /* Fonts */
-  --font-ui: 'Outfit', sans-serif;
-  --font-arabic: 'Scheherazade New', serif;
+  /* Compatibilité — anciennes références remappées sur l'émeraude */
+  --color-gold-main:     #059669;
+  --color-gold-light:    #ECFDF5;
+  --color-gold-600:      #059669;
+  --color-gold-500:      #059669;
+  --color-brown-dark:    #047857;
+  --color-brown-text:    #064E3B;
+  --color-brown-light:   #D1FAE5;
 
-  /* Missing Variables Restored */
-  --color-sand-50: #fdfbf7;
-  --color-sand-100: #f7f3ec;
-  --color-sand-200: #e7e5e4;
-  --color-sand-300: #d6d3d1;
-  --color-sand-400: #a8a29e;
-  --color-sand-500: #78716c;
-  --color-sand-900: #4a4036;
+  --ink-primary:         #064E3B;
+  --ink-secondary:       #065F46;
+  --ink-muted:           #6EE7B7;
+  --text-secondary:      #065F46;
 
-  --color-blue-900: #1e3a8a;
+  --state-success:       #059669;
+  --color-green-success: #059669;
+  --color-emerald-500:   #10B981;
+  --state-error:         #DC2626;
+  --color-red-danger:    #DC2626;
+  --color-red-500:       #DC2626;
 
-  --color-emerald-500: #10b981;
-  --color-red-500: #ef4444;
+  --border-default:      #A7F3D0;
+  --border-focus:        #059669;
+
+  /* Sand scale → green scale (compatibilité sélecteurs existants) */
+  --color-sand-50:       #F0FDF9;
+  --color-sand-100:      #ECFDF5;
+  --color-sand-200:      #A7F3D0;
+  --color-sand-300:      #6EE7B7;
+  --color-sand-400:      #34D399;
+  --color-sand-500:      #065F46;
+  --color-sand-900:      #064E3B;
+
+  --color-blue-900:      #064E3B;
+
+  /* Typographie */
+  --font-ui:             'DM Sans', sans-serif;
+  --font-arabic:         'Noto Naskh Arabic', serif;
 }
 
 [data-theme='dark'] {
-  --bg-app: #2d241c;
-  /* Requested Brown */
-  --bg-card: #3a3028;
-  /* Slightly lighter brown for cards */
+  --bg-app:              #022C22;
+  --bg-surface:          #064E3B;
+  --bg-card:             #064E3B;
+  --bg-tinted:           #065F46;
+  --bg-deep:             #065F46;
+  --bg-elevated:         #047857;
 
-  --color-brown-text: #f7f3ec;
-  /* Light Sand text */
-  --color-sand-900: #f7f3ec;
-  /* For headings */
-  --color-sand-500: #d6d3d1;
-  /* Lighter secondary text */
-  --color-sand-200: #4a4036;
-  /* Darker borders */
+  --brand-primary:       #34D399;
+  --brand-deep:          #10B981;
+  --brand-accent:        #34D399;
+  --brand-light:         rgba(52, 211, 153, 0.15);
+  --brand-glow:          rgba(52, 211, 153, 0.12);
+  --brand-glow-lg:       rgba(52, 211, 153, 0.20);
 
-  --color-gold-light: #4a4036;
-  /* Darker gold/brown for secondary backgrounds */
+  --selected-bg:         #059669;
+  --selected-border:     #34D399;
+  --selected-border-w:   3px;
+  --selected-glow:       0 0 0 4px rgba(52, 211, 153, 0.30), 0 4px 16px rgba(52, 211, 153, 0.22);
+  --selected-arabic:     #ECFDF5;
+  --selected-name:       #ECFDF5;
 
-  /* Buttons and accents remain Gold/Red/Green but text on gold might need check */
+  --color-gold-main:     #34D399;
+  --color-gold-light:    #064E3B;
+  --color-gold-600:      #34D399;
+  --color-gold-500:      #34D399;
+  --color-brown-dark:    #10B981;
+  --color-brown-text:    #ECFDF5;
+  --color-brown-light:   #065F46;
+
+  --ink-primary:         #ECFDF5;
+  --ink-secondary:       #A7F3D0;
+  --ink-muted:           #6EE7B7;
+  --text-secondary:      #A7F3D0;
+
+  --state-success:       #34D399;
+  --color-green-success: #34D399;
+  --color-emerald-500:   #34D399;
+  --state-error:         #FCA5A5;
+  --color-red-danger:    #FCA5A5;
+  --color-red-500:       #FCA5A5;
+
+  --border-default:      rgba(52, 211, 153, 0.2);
+  --border-focus:        #34D399;
+
+  --color-sand-50:       #022C22;
+  --color-sand-100:      #064E3B;
+  --color-sand-200:      #065F46;
+  --color-sand-300:      rgba(52, 211, 153, 0.25);
+  --color-sand-400:      #6EE7B7;
+  --color-sand-500:      #A7F3D0;
+  --color-sand-900:      #ECFDF5;
+
+  --color-blue-900:      #ECFDF5;
+}
+
+[data-theme='dark'] .btn-primary {
+  background-color: #34D399;
+  color: #022C22;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.3), 0 4px 14px rgba(52,211,153,0.25);
+}
+
+[data-theme='dark'] .btn-danger-outline {
+  background: transparent;
+  color: #FCA5A5;
+  border-color: #FCA5A5;
 }
 
 * {
@@ -79,9 +149,11 @@ body {
 body {
   font-family: var(--font-ui);
   background-color: var(--bg-app);
-  color: var(--color-brown-text);
+  color: var(--ink-primary);
   min-height: 100vh;
   /* overflow-x is handled in html, body rule above */
+  /* Space for fixed bottom nav */
+  padding-bottom: calc(64px + env(safe-area-inset-bottom));
 }
 
 h1,
@@ -90,7 +162,7 @@ h3,
 h4,
 h5,
 h6 {
-  color: var(--color-brown-text);
+  color: var(--ink-primary);
   margin-bottom: 0.5rem;
 }
 
@@ -102,46 +174,63 @@ h6 {
 }
 
 .card {
-  background: var(--bg-card);
-  border: 1px solid #e5e7eb;
+  background: var(--bg-surface);
+  border: 1.5px solid var(--border-default);
   border-radius: 16px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(6, 78, 59, 0.05), 0 4px 12px rgba(6, 78, 59, 0.04);
+  transition: box-shadow 0.2s ease, transform 0.15s ease;
 }
 
-/* Button Styles - Matching Screenshots (Gold) */
+.card:hover {
+  box-shadow: 0 4px 16px rgba(5, 150, 105, 0.10);
+}
+
+/* Button Styles — Direction Émeraude */
 .btn-primary {
-  background-color: var(--color-gold-main);
+  background-color: var(--brand-primary);
   color: white;
   border: none;
-  border-radius: 50px;
-  padding: 1rem 2rem;
-  font-size: 1.1rem;
+  border-radius: 12px;
+  height: 52px;
+  padding: 0 2rem;
+  font-family: var(--font-ui);
+  font-size: 1rem;
   font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.1s, background-color 0.2s;
+  touch-action: manipulation;
+  box-shadow:
+    0 1px 2px rgba(4, 120, 87, 0.15),
+    0 4px 14px rgba(5, 150, 105, 0.32);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 .btn-primary:active {
-  transform: scale(0.98);
+  transform: scale(0.97);
+  box-shadow: 0 1px 4px rgba(4, 120, 87, 0.2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-primary { transition: none; }
 }
 
 .btn-secondary {
   background-color: transparent;
-  color: var(--color-gold-main);
-  border: 2px solid var(--color-gold-main);
-  border-radius: 50px;
-  padding: 0.9rem 1.9rem;
-  /* Compensate for border */
-  font-size: 1.1rem;
+  color: var(--brand-primary);
+  border: 2px solid var(--brand-primary);
+  border-radius: 12px;
+  height: 52px;
+  padding: 0 1.75rem;
+  font-family: var(--font-ui);
+  font-size: 1rem;
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.2s;
+  touch-action: manipulation;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-.btn-secondary:hover {
-  background-color: var(--color-gold-light);
+.btn-secondary:hover,
+.btn-secondary:focus-visible {
+  background-color: var(--brand-light);
 }
 
 .btn-danger-outline {
@@ -174,6 +263,8 @@ h6 {
 .arabic-text {
   font-family: var(--font-arabic);
   direction: rtl;
+  /* Minimum legibility for Arabic script */
+  font-size: max(1.25rem, 20px);
 }
 
 /* Animations */
@@ -242,15 +333,12 @@ h6 {
     /* Override inline styles if needed, but better to use class */
   }
 
-  /* Stack buttons on mobile if needed, or keeping them side-by-side but smaller */
+  /* Buttons full-width on mobile */
   .btn-primary,
   .btn-secondary,
   .btn-danger,
   .btn-danger-outline {
-    padding: 0.8rem 1.5rem;
-    font-size: 1rem;
     width: 100%;
-    /* Full width buttons often easier on mobile */
     justify-content: center;
     display: flex;
     align-items: center;

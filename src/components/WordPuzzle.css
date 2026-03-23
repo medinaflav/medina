@@ -240,3 +240,12 @@
     color: var(--color-sand-500);
     align-self: center;
 }
+
+[data-theme='dark'] .tile-dock { background-color: rgba(52,211,153,0.06); }
+[data-theme='dark'] .feedback-error {
+  background-color: rgba(252,165,165,0.1);
+  color: #FCA5A5;
+  border: 1px solid rgba(252,165,165,0.3);
+}
+[data-theme='dark'] .translation-meaning { color: #FCA5A5; }
+[data-theme='dark'] .feedback-success .translation-meaning { color: var(--ink-secondary); }

@@ -25,3 +25,7 @@ dist-ssr
 kaikki.org-dictionary-Arabic-words.jsonl
 .env
 .env.*
+database.sqlite
+ui-previews/
+*.png
+"Capture*"

@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- Gradient vertical émeraude -->
+    <linearGradient id="bg-gradient" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#059669"/>
+      <stop offset="100%" stop-color="#047857"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Fond carré arrondi -->
+  <rect width="512" height="512" rx="80" ry="80" fill="url(#bg-gradient)"/>
+
+  <!-- Motif géométrique islamique : étoile à 8 branches centrée -->
+  <!-- Étoile construite comme deux carrés pivotés à 45°, via un polygon -->
+  <g opacity="0.08" fill="#ffffff" transform="translate(256,256)">
+    <!-- Carré 1 (droit) -->
+    <rect x="-90" y="-90" width="180" height="180" rx="8"/>
+    <!-- Carré 2 (pivoté 45°) -->
+    <rect x="-90" y="-90" width="180" height="180" rx="8" transform="rotate(45)"/>
+    <!-- Cercle central léger pour lier le motif -->
+    <circle cx="0" cy="0" r="60" fill="none" stroke="#ffffff" stroke-width="3"/>
+    <!-- Rayons décoratifs radiaux -->
+    <line x1="0" y1="-150" x2="0" y2="-100" stroke="#ffffff" stroke-width="2"/>
+    <line x1="0" y1="100" x2="0" y2="150" stroke="#ffffff" stroke-width="2"/>
+    <line x1="-150" y1="0" x2="-100" y2="0" stroke="#ffffff" stroke-width="2"/>
+    <line x1="100" y1="0" x2="150" y2="0" stroke="#ffffff" stroke-width="2"/>
+    <line x1="-106" y1="-106" x2="-71" y2="-71" stroke="#ffffff" stroke-width="2"/>
+    <line x1="71" y1="-71" x2="106" y2="-106" stroke="#ffffff" stroke-width="2"/>
+    <line x1="-106" y1="106" x2="-71" y2="71" stroke="#ffffff" stroke-width="2"/>
+    <line x1="71" y1="71" x2="106" y2="106" stroke="#ffffff" stroke-width="2"/>
+  </g>
+
+  <!-- Lettre arabe م (mim), grande, légèrement au-dessus du centre -->
+  <text
+    x="256"
+    y="310"
+    text-anchor="middle"
+    font-family="serif"
+    font-size="300"
+    fill="#ffffff"
+    font-weight="bold"
+  >م</text>
+
+  <!-- Ligne horizontale décorative sous la lettre -->
+  <line
+    x1="196" y1="370"
+    x2="316" y2="370"
+    stroke="rgba(255,255,255,0.3)"
+    stroke-width="2"
+    stroke-linecap="round"
+  />
+</svg>

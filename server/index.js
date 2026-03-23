@@ -61,7 +61,9 @@ initEmail();
 const ALLOWED_ORIGINS = [
     'http://localhost:5173',
     'http://localhost:5174',
-    'http://192.168.1.101:5173',
+    'http://localhost:3000',
+    'http://medinalearn.duckdns.org',
+    'https://medinalearn.duckdns.org',
 ];
 app.use(cors({
     origin: (origin, callback) => {

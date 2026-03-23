@@ -179,3 +179,8 @@
     font-weight: 700;
     color: var(--color-brown-text);
 }
+
+[data-theme='dark'] .toggle-slider { background-color: rgba(52,211,153,0.2); }
+[data-theme='dark'] .toggle-input:checked + .toggle-slider { background-color: #34D399; }
+[data-theme='dark'] .summary-title { color: #34D399; }
+[data-theme='dark'] .stat-value { color: var(--ink-primary); }

@@ -2,15 +2,15 @@
 
 /* Cards */
 .card {
-    background: var(--bg-card);
-    border: 1px solid var(--color-sand-200);
+    background: var(--bg-surface);
+    border: 1.5px solid var(--border-default);
     border-radius: 16px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 3px rgba(6, 78, 59, 0.05), 0 4px 12px rgba(6, 78, 59, 0.04);
+    transition: box-shadow 0.2s ease, transform 0.15s ease;
 }
 
 .card:hover {
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
+    box-shadow: 0 4px 20px rgba(5, 150, 105, 0.12);
 }
 
 /* Typography */
@@ -76,12 +76,24 @@
 }
 
 [data-theme='dark'] .glass-panel {
-    background: rgba(58, 48, 40, 0.7);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(6, 78, 59, 0.75);
+    border: 1px solid rgba(167, 243, 208, 0.08);
 }
 
-/* Button overrides or enhancements if needed, 
-   but base buttons are in index.css. 
-   Let's ensure they are consistent here or moving them here later.
-   For now, I'll rely on index.css for primary buttons but add utilities.
-*/
+/* Primary button — ensures spec compliance across all contexts.
+   Base is defined in index.css; this block reinforces the design tokens. */
+.btn-primary {
+    background: #059669;
+    color: #FFFFFF;
+    border-radius: 12px;
+    height: 52px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+}
+
+[data-theme='dark'] .btn-primary {
+  background: #34D399;
+  color: #022C22;
+  box-shadow: 0 4px 12px rgba(52, 211, 153, 0.25);
+}

@@ -63,7 +63,7 @@
     font-size: 1rem;
     font-weight: bold;
     transition: all 0.2s;
-    box-shadow: 0 4px 6px rgba(197, 160, 40, 0.3);
+    box-shadow: 0 4px 6px rgba(5, 150, 105, 0.3);
 }
 
 .btn-cancel-mode {
@@ -154,3 +154,9 @@
 [data-theme='dark'] .letter-form-card .text-secondary {
     color: var(--color-sand-200);
 }
+
+[data-theme='dark'] .sticky-footer {
+  background-color: rgba(6,78,59,0.95);
+  border-top-color: rgba(52,211,153,0.2);
+}
+[data-theme='dark'] .selector-subtitle { color: var(--ink-muted); }

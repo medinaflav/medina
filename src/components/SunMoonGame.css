@@ -12,7 +12,7 @@
 
 .letter-display {
   font-size: 8rem;
-  font-family: 'Amiri', serif;
+  font-family: var(--font-arabic);
   margin-bottom: 2rem;
   transition: transform 0.3s ease;
   cursor: default;
@@ -47,11 +47,11 @@
 .choice-btn:hover {
   transform: translateY(-5px);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  border-color: var(--color-gold-500);
+  border-color: var(--brand-primary);
 }
 
 .choice-btn.sun {
-  color: #d97706;
+  color: #f59e0b;
 }
 
 .choice-btn.moon {
@@ -89,23 +89,21 @@
 }
 
 /* Dark mode overrides */
-@media (prefers-color-scheme: dark) {
-  .sun-moon-game {
-      color: var(--color-sand-100);
-  }
-  
-  .choice-btn {
-      background: var(--color-brown-dark);
-      border-color: var(--color-brown-light);
-      color: var(--color-sand-100);
-  }
+[data-theme='dark'] .sun-moon-game {
+  color: var(--ink-primary);
+}
 
-  .choice-btn:hover {
-      border-color: var(--color-gold-500);
-      background: var(--color-brown-light);
-  }
+[data-theme='dark'] .choice-btn {
+  background: var(--bg-surface);
+  border-color: var(--border-default);
+  color: var(--ink-primary);
+}
 
-  .feedback-overlay {
-      background: rgba(0, 0, 0, 0.85);
-  }
+[data-theme='dark'] .choice-btn:hover {
+  border-color: var(--brand-primary);
+  background: var(--bg-tinted);
+}
+
+[data-theme='dark'] .feedback-overlay {
+  background: rgba(2, 44, 34, 0.92);
 }

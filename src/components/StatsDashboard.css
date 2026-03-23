@@ -72,9 +72,10 @@
 }
 
 .review-content {
-    color: var(--color-sand-200);
+    color: var(--state-error);
     font-size: 1rem;
     line-height: 1.5;
+    opacity: 0.85;
 }
 
 /* Detailed Stats Section */
@@ -209,3 +210,19 @@
     width: 100%;
     margin-top: 1.5rem;
 }
+
+[data-theme='dark'] .accuracy-label { color: var(--ink-secondary); }
+[data-theme='dark'] .letter-name { color: var(--ink-muted); }
+[data-theme='dark'] .score-text { color: var(--ink-muted); }
+[data-theme='dark'] .form-name { color: var(--ink-muted); }
+[data-theme='dark'] .progress-track { background-color: rgba(52,211,153,0.15); }
+[data-theme='dark'] .review-card {
+  background-color: rgba(252,165,165,0.08);
+  border-color: rgba(252,165,165,0.3);
+}
+[data-theme='dark'] .review-header { color: #FCA5A5; }
+[data-theme='dark'] .review-content { color: #FCA5A5; }
+[data-theme='dark'] .stats-title { color: var(--ink-primary); }
+[data-theme='dark'] .stats-subtitle { color: var(--ink-primary); }
+[data-theme='dark'] .letter-char { color: var(--ink-primary); }
+[data-theme='dark'] .modal-title { color: var(--ink-primary); }

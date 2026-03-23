@@ -26,8 +26,8 @@
 }
 
 [data-theme='dark'] .my-account-card {
-    background: rgba(45, 36, 28, 0.8);
-    border-color: rgba(255, 255, 255, 0.08);
+  background: transparent;
+  border-color: rgba(52, 211, 153, 0.1);
 }
 
 .my-account-header {
@@ -54,7 +54,7 @@
 .my-account-avatar {
     width: 100px;
     height: 100px;
-    background: linear-gradient(135deg, var(--color-gold-main), #b45309);
+    background: linear-gradient(135deg, #059669, #047857);
     border-radius: 50%;
     margin: 0 auto 1.5rem;
     display: flex;
@@ -63,8 +63,14 @@
     font-size: 3rem;
     color: white;
     font-family: var(--font-arabic);
-    box-shadow: 0 10px 20px rgba(180, 83, 9, 0.3);
+    box-shadow: 0 10px 20px rgba(5, 150, 105, 0.3);
     border: 4px solid rgba(255, 255, 255, 0.8);
+}
+
+[data-theme='dark'] .my-account-avatar {
+  background: linear-gradient(135deg, #34D399, #059669);
+  box-shadow: 0 10px 20px rgba(52, 211, 153, 0.2);
+  border-color: rgba(52, 211, 153, 0.3);
 }
 
 .my-account-username {
@@ -112,7 +118,7 @@
 }
 
 [data-theme='dark'] .my-account-info-row {
-    background: rgba(0, 0, 0, 0.2);
+  background: rgba(52, 211, 153, 0.05);
 }
 
 .my-account-info-row:hover {
@@ -122,8 +128,8 @@
 }
 
 [data-theme='dark'] .my-account-info-row:hover {
-    background: rgba(0, 0, 0, 0.3);
-    border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(52, 211, 153, 0.1);
+  border-color: rgba(52, 211, 153, 0.2);
 }
 
 .info-label {
@@ -155,11 +161,16 @@
 }
 
 .stat-box {
-    background: linear-gradient(135deg, rgba(197, 160, 40, 0.1), rgba(197, 160, 40, 0.05));
+    background: linear-gradient(135deg, rgba(5,150,105,0.08), rgba(5,150,105,0.04));
     padding: 1.5rem;
     border-radius: 20px;
-    border: 1px solid rgba(197, 160, 40, 0.2);
+    border: 1px solid rgba(5, 150, 105, 0.15);
     text-align: center;
+}
+
+[data-theme='dark'] .stat-box {
+  background: linear-gradient(135deg, rgba(52,211,153,0.08), rgba(52,211,153,0.04));
+  border-color: rgba(52, 211, 153, 0.2);
 }
 
 .stat-number {
@@ -178,7 +189,7 @@
 }
 
 [data-theme='dark'] .stat-label {
-    color: var(--color-sand-200);
+    color: var(--ink-secondary);
 }
 
 .btn-logout {
